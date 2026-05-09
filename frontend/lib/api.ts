@@ -50,7 +50,7 @@ export async function getMe() {
   return req("/auth/me");
 }
 
-export async function getAccounts(): Promise<{ accounts: Array<{ dp: string; meroshare_user: string }> }> {
+export async function getAccounts(): Promise<{ accounts: Array<{ dp: string; meroshare_user: string; crn?: string }> }> {
   return req("/setup/accounts");
 }
 
