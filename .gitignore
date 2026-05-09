@@ -1,0 +1,30 @@
+# Secrets
+.env
+*.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+dist/
+*.spec
+build/
+
+# Bot source (never commit)
+bot/source/
+bot/dist/
+bot/*.py
+
+# Frontend deps
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Misc
+.DS_Store
+Thumbs.db
+graphify-out/

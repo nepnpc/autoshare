@@ -1,0 +1,26 @@
+# AutoShare IPO Bot — auto-generated, do not edit manually
+name: AutoShare IPO Bot
+
+on:
+  schedule:
+    # 6:15 AM Nepal time = 00:30 UTC
+    - cron: '30 0 * * *'
+  workflow_dispatch:
+    # Allows manual trigger from AutoShare dashboard
+
+jobs:
+  apply-ipo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Apply for open IPOs
+        run: |
+          docker run --rm \
+            -e MEROSHARE_USER="${{ secrets.MEROSHARE_USER }}" \
+            -e MEROSHARE_PASS="${{ secrets.MEROSHARE_PASS }}" \
+            -e MEROSHARE_DP="${{ secrets.MEROSHARE_DP }}" \
+            -e MEROSHARE_CRN="${{ secrets.MEROSHARE_CRN }}" \
+            -e MEROSHARE_PIN="${{ secrets.MEROSHARE_PIN }}" \
+            -e AUTOSHARE_WEBHOOK="${{ secrets.AUTOSHARE_WEBHOOK }}" \
+            ghcr.io/nepnpc/autoshare-bot:latest

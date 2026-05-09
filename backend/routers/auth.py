@@ -1,0 +1,125 @@
+import secrets
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from config import settings
+from database import get_db
+from models import User
+from services import github as gh
+from services.crypto import encrypt
+from auth_utils import create_token, get_current_user
+
+router = APIRouter(prefix="/auth", tags=["auth"])
+
+REPO_NAME = "autoshare-ipo-bot"
+
+
+@router.get("/login")
+async def login():
+    state = secrets.token_urlsafe(16)
+    url = (
+        "https://github.com/login/oauth/authorize"
+        f"?client_id={settings.github_client_id}"
+        f"&redirect_uri={settings.frontend_url}/auth/callback"
+        "&scope=repo,workflow"
+        f"&state={state}"
+    )
+    return {"url": url, "state": state}
+
+
+@router.get("/callback")
+async def callback(
+    code: str = Query(...),
+    state: str = Query(...),
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        token = await gh.exchange_code(settings.github_client_id, settings.github_client_secret, code)
+        user_data = await gh.get_user(token)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"GitHub OAuth failed: {e}")
+
+    github_user_id = user_data["id"]
+    github_username = user_data["login"]
+
+    result = await db.execute(select(User).where(User.github_user_id == github_user_id))
+    user = result.scalar_one_or_none()
+
+    if user:
+        user.github_access_token_enc = encrypt(token)
+        user.github_username = github_username
+    else:
+        user = User(
+            github_user_id=github_user_id,
+            github_username=github_username,
+            github_access_token_enc=encrypt(token),
+            github_repo_name=REPO_NAME,
+            webhook_token=secrets.token_urlsafe(32),
+            status="pending",
+        )
+        db.add(user)
+
+    await db.commit()
+    await db.refresh(user)
+
+    try:
+        await gh.create_repo(token, REPO_NAME)
+        workflow_yaml = _build_workflow(settings.docker_image)
+        await gh.push_file(
+            token, github_username, REPO_NAME,
+            ".github/workflows/bot.yml",
+            workflow_yaml,
+            "AutoShare: update bot workflow",
+        )
+        await gh.set_secret(token, github_username, REPO_NAME, "GHCR_PAT", settings.ghcr_pat)
+    except Exception as e:
+        user.status = "error"
+        await db.commit()
+        raise HTTPException(status_code=500, detail=f"Repo setup failed: {e}")
+
+    jwt_token = create_token(str(user.id))
+    return {"token": jwt_token, "github_username": github_username, "status": user.status}
+
+
+@router.get("/me")
+async def me(user: User = Depends(get_current_user)):
+    return {
+        "id": str(user.id),
+        "github_username": user.github_username,
+        "github_repo_name": user.github_repo_name,
+        "meroshare_dp": user.meroshare_dp,
+        "status": user.status,
+        "last_run_at": user.last_run_at,
+        "last_run_status": user.last_run_status,
+    }
+
+
+def _build_workflow(docker_image: str) -> str:
+    return f"""\
+# AutoShare IPO Bot — auto-generated, do not edit manually
+name: AutoShare IPO Bot
+
+on:
+  schedule:
+    - cron: '30 0 * * *'  # 6:15 AM Nepal time (UTC+5:45)
+  workflow_dispatch:
+
+jobs:
+  apply-ipo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Login to GitHub Container Registry
+        run: echo "${{{{ secrets.GHCR_PAT }}}}" | docker login ghcr.io -u nepnpc --password-stdin
+
+      - name: Apply for open IPOs
+        env:
+          MEROSHARE_ACCOUNTS: ${{{{ secrets.MEROSHARE_ACCOUNTS }}}}
+          AUTOSHARE_WEBHOOK: ${{{{ secrets.AUTOSHARE_WEBHOOK }}}}
+        run: |
+          docker run --rm \\
+            -e MEROSHARE_ACCOUNTS \\
+            -e AUTOSHARE_WEBHOOK \\
+            {docker_image}
+"""
