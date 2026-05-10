@@ -2,19 +2,37 @@
 @import "tailwindcss";
 
 :root {
-  --bg:        #040e08;
-  --bg2:       #071510;
-  --surface:   rgba(8, 28, 16, 0.85);
-  --card:      #0a1f12;
-  --border:    rgba(57, 211, 83, 0.12);
-  --border-hi: rgba(57, 211, 83, 0.35);
+  /* Backgrounds */
+  --bg:        #0d1117;
+  --bg2:       #12181f;
+  --surface:   rgba(18, 26, 40, 0.88);
+  --card:      #161c28;
+
+  /* Brand blue — logo circle */
+  --blue:      #1d6feb;
+  --blue-deep: #1251c5;
+  --blue-hi:   #4d94ff;
+
+  /* Accent green — logo right arrow (growth) */
   --green:     #238636;
-  --bright:    #39d353;
-  --glow:      #2ea043;
-  --text:      #d4edda;
-  --muted:     #6aab7a;
-  --dim:       #3d6b4a;
+  --bright:    #4ade80;
+  --glow:      #22c55e;
+
+  /* Secondary orange — logo left arrow (energy) */
+  --orange:    #f0883e;
+  --orange-hi: #ffa461;
+
+  /* Typography */
+  --text:      #e6edf3;
+  --muted:     #7d8590;
+  --dim:       #3d444d;
+
+  /* Status */
   --danger:    #f85149;
+
+  /* Borders */
+  --border:    rgba(29, 111, 235, 0.15);
+  --border-hi: rgba(77, 148, 255, 0.40);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -36,7 +54,7 @@ body {
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: var(--blue-deep); border-radius: 2px; }
 
 /* Ticker */
 @keyframes ticker {
@@ -50,10 +68,16 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Pulse glow */
+/* Pulse glow — blue */
 @keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(57, 211, 83, 0.4); }
-  50%       { box-shadow: 0 0 0 8px rgba(57, 211, 83, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(29, 111, 235, 0.5); }
+  50%       { box-shadow: 0 0 0 8px rgba(29, 111, 235, 0); }
+}
+
+/* Pulse glow — green for active/success */
+@keyframes pulseGlowGreen {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5); }
+  50%       { box-shadow: 0 0 0 8px rgba(74, 222, 128, 0); }
 }
 
 /* Spin */
@@ -74,10 +98,15 @@ body {
   50%       { opacity: 0; }
 }
 
+/* Shimmer for logo glow */
+@keyframes shimmer {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+
 .anim-fade-up { animation: fadeUp 0.6s ease both; }
 .anim-delay-1 { animation-delay: 0.1s; }
 .anim-delay-2 { animation-delay: 0.2s; }
 .anim-delay-3 { animation-delay: 0.3s; }
 .anim-delay-4 { animation-delay: 0.4s; }
 .anim-delay-5 { animation-delay: 0.5s; }
-

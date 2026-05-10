@@ -32,16 +32,25 @@ function CallbackInner() {
   }, [params, router]);
 
   return (
-    <main style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "var(--bg)", position: "relative", overflow: "hidden" }}>
+    <main style={{
+      minHeight: "100vh", display: "flex", flexDirection: "column",
+      alignItems: "center", justifyContent: "center",
+      background: "var(--bg)", position: "relative", overflow: "hidden",
+    }}>
+      {/* Grid */}
       <div style={{
         position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none",
-        backgroundImage: `linear-gradient(rgba(57,211,83,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(57,211,83,0.03) 1px, transparent 1px)`,
+        backgroundImage: `
+          linear-gradient(rgba(29,111,235,0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(29,111,235,0.04) 1px, transparent 1px)
+        `,
         backgroundSize: "48px 48px",
       }} />
+      {/* Glow */}
       <div style={{
         position: "fixed", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
         width: "500px", height: "500px", borderRadius: "50%",
-        background: "radial-gradient(ellipse, rgba(35,134,54,0.1) 0%, transparent 70%)",
+        background: "radial-gradient(ellipse, rgba(29,111,235,0.12) 0%, transparent 70%)",
         pointerEvents: "none", zIndex: 0,
       }} />
       <div style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
@@ -73,8 +82,8 @@ function Spinner() {
   return (
     <svg width="48" height="48" viewBox="0 0 48 48" style={{ animation: "spin 0.9s linear infinite" }}>
       <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
-      <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(57,211,83,0.12)" strokeWidth="3" />
-      <path d="M24 4 A20 20 0 0 1 44 24" fill="none" stroke="#39d353" strokeWidth="3" strokeLinecap="round" />
+      <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(29,111,235,0.15)" strokeWidth="3" />
+      <path d="M24 4 A20 20 0 0 1 44 24" fill="none" stroke="#1d6feb" strokeWidth="3" strokeLinecap="round" />
     </svg>
   );
 }

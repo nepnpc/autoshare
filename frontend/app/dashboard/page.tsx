@@ -11,10 +11,10 @@ type UserData = { github_username: string; github_repo_name: string; meroshare_d
 const STATUS_DOT: Record<string, string> = {
   applied: "var(--bright)",
   no_ipos: "var(--muted)",
-  already_applied: "#d29922",
+  already_applied: "var(--orange)",
   error: "var(--danger)",
   active: "var(--bright)",
-  pending: "#d29922",
+  pending: "var(--orange)",
 };
 
 const STATUS_LABEL: Record<string, string> = {
@@ -86,7 +86,7 @@ function DashboardInner() {
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
           <div style={{
             width: "32px", height: "32px", borderRadius: "50%",
-            border: "2px solid var(--border-hi)", borderTopColor: "var(--bright)",
+            border: "2px solid var(--border-hi)", borderTopColor: "var(--blue)",
             animation: "spin 0.8s linear infinite",
           }} />
           <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.75rem", color: "var(--muted)", letterSpacing: "0.1em" }}>
@@ -106,17 +106,23 @@ function DashboardInner() {
       <div style={{
         position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none",
         backgroundImage: `
-          linear-gradient(rgba(57,211,83,0.025) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(57,211,83,0.025) 1px, transparent 1px)
+          linear-gradient(rgba(29,111,235,0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(29,111,235,0.03) 1px, transparent 1px)
         `,
         backgroundSize: "48px 48px",
       }} />
 
-      {/* Glow */}
+      {/* Glows */}
       <div style={{
         position: "fixed", top: "-15%", left: "50%", transform: "translateX(-50%)",
         width: "700px", height: "500px", borderRadius: "50%",
-        background: "radial-gradient(ellipse, rgba(35,134,54,0.1) 0%, transparent 70%)",
+        background: "radial-gradient(ellipse, rgba(29,111,235,0.10) 0%, transparent 70%)",
+        pointerEvents: "none", zIndex: 0,
+      }} />
+      <div style={{
+        position: "fixed", top: "-5%", right: "-5%",
+        width: "350px", height: "350px", borderRadius: "50%",
+        background: "radial-gradient(ellipse, rgba(34,197,94,0.06) 0%, transparent 70%)",
         pointerEvents: "none", zIndex: 0,
       }} />
 
@@ -125,17 +131,12 @@ function DashboardInner() {
         display: "flex", justifyContent: "space-between", alignItems: "center",
         padding: "1.25rem 3rem", position: "relative", zIndex: 10,
         borderBottom: "1px solid var(--border)",
-        backdropFilter: "blur(8px)", background: "rgba(4,14,8,0.7)",
+        backdropFilter: "blur(12px)", background: "rgba(13,17,23,0.82)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
-          <div style={{
-            width: "28px", height: "28px", borderRadius: "6px",
-            background: "linear-gradient(135deg, var(--green), var(--bright))",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: "0.875rem",
-          }}>📈</div>
-          <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "1.1rem", color: "var(--text)" }}>
-            AutoShare
+          <LogoMark />
+          <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "1.15rem", letterSpacing: "-0.01em" }}>
+            <span style={{ color: "var(--blue-hi)" }}>Auto</span><span style={{ color: "var(--bright)" }}>Share</span>
           </span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
@@ -169,11 +170,16 @@ function DashboardInner() {
         {/* Setup success banner */}
         {justSetup && (
           <div className="anim-fade-up" style={{
-            background: "rgba(35,134,54,0.12)", border: "1px solid var(--border-hi)",
+            background: "rgba(29,111,235,0.1)", border: "1px solid var(--border-hi)",
             borderRadius: "10px", padding: "1rem 1.25rem", marginBottom: "1.5rem",
             display: "flex", alignItems: "center", gap: "0.875rem",
           }}>
-            <span style={{ fontSize: "1.25rem" }}>🎉</span>
+            <span style={{ color: "var(--bright)", flexShrink: 0 }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+            </span>
             <div>
               <p style={{ color: "var(--bright)", fontWeight: 600, fontSize: "0.95rem", marginBottom: "0.15rem" }}>
                 Bot activated successfully!
@@ -193,7 +199,7 @@ function DashboardInner() {
         }}>
           <div style={{
             position: "absolute", top: 0, right: 0, width: "200px", height: "200px",
-            background: "radial-gradient(circle at 100% 0%, rgba(57,211,83,0.05) 0%, transparent 65%)",
+            background: "radial-gradient(circle at 100% 0%, rgba(29,111,235,0.06) 0%, transparent 65%)",
             pointerEvents: "none",
           }} />
 
@@ -213,7 +219,7 @@ function DashboardInner() {
                   width: "8px", height: "8px", borderRadius: "50%",
                   background: STATUS_DOT[user.status] || "var(--muted)",
                   display: "inline-block",
-                  ...(isActive ? { animation: "pulseGlow 2s ease infinite" } : {}),
+                  ...(isActive ? { animation: "pulseGlowGreen 2s ease infinite" } : {}),
                 }} />
                 <span style={{
                   fontFamily: "'Syne', sans-serif", fontWeight: 700,
@@ -247,7 +253,7 @@ function DashboardInner() {
             {/* Next run */}
             <div>
               <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.68rem", color: "var(--dim)", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>NEXT RUN</p>
-              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.875rem", color: "var(--muted)" }}>
+              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.875rem", color: "var(--orange)" }}>
                 6:15 AM NST
               </span>
             </div>
@@ -261,17 +267,19 @@ function DashboardInner() {
               style={{
                 display: "flex", alignItems: "center", gap: "0.5rem",
                 padding: "0.625rem 1.25rem", borderRadius: "8px",
-                background: triggering || !isActive ? "rgba(57,211,83,0.05)" : "linear-gradient(135deg, var(--green), var(--glow))",
+                background: triggering || !isActive
+                  ? "rgba(29,111,235,0.05)"
+                  : "linear-gradient(135deg, var(--blue) 0%, var(--glow) 100%)",
                 border: `1px solid ${!isActive ? "var(--border)" : "transparent"}`,
                 color: !isActive ? "var(--dim)" : "#fff",
                 cursor: triggering || !isActive ? "not-allowed" : "pointer",
                 fontSize: "0.875rem", fontWeight: 600, fontFamily: "'Outfit', sans-serif",
-                boxShadow: isActive && !triggering ? "0 0 20px rgba(35,134,54,0.3)" : "none",
+                boxShadow: isActive && !triggering ? "0 0 24px rgba(29,111,235,0.3)" : "none",
                 transition: "all 0.2s",
                 opacity: !isActive ? 0.4 : 1,
               }}
-              onMouseEnter={e => { if (isActive && !triggering) (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 32px rgba(57,211,83,0.4)"; }}
-              onMouseLeave={e => { if (isActive && !triggering) (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 20px rgba(35,134,54,0.3)"; }}
+              onMouseEnter={e => { if (isActive && !triggering) (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 36px rgba(29,111,235,0.5)"; }}
+              onMouseLeave={e => { if (isActive && !triggering) (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 24px rgba(29,111,235,0.3)"; }}
             >
               {triggering ? (
                 <>
@@ -279,7 +287,12 @@ function DashboardInner() {
                   Triggering…
                 </>
               ) : (
-                <>⚡ Run bot now</>
+                <>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                  Run bot now
+                </>
               )}
             </button>
 
@@ -289,9 +302,9 @@ function DashboardInner() {
               style={{
                 padding: "0.625rem 1.25rem", borderRadius: "8px",
                 background: "transparent", border: "1px solid var(--border)",
-                color: "var(--muted)", fontSize: "0.875rem",
+                color: "var(--muted)", fontSize: "0.78rem",
                 textDecoration: "none", fontFamily: "'DM Mono', monospace",
-                fontSize_: "0.78rem", letterSpacing: "0.04em",
+                letterSpacing: "0.04em",
                 transition: "all 0.15s",
               } as React.CSSProperties}
               onMouseEnter={e => {
@@ -311,7 +324,7 @@ function DashboardInner() {
               style={{
                 padding: "0.625rem 1.25rem", borderRadius: "8px",
                 background: "transparent", border: "1px solid var(--border)",
-                color: "var(--muted)", fontSize: "0.875rem",
+                color: "var(--muted)", fontSize: "0.78rem",
                 textDecoration: "none", fontFamily: "'DM Mono', monospace",
                 letterSpacing: "0.04em", transition: "all 0.15s",
               } as React.CSSProperties}
@@ -331,8 +344,8 @@ function DashboardInner() {
           {triggerMsg && (
             <div style={{
               marginTop: "0.875rem", padding: "0.625rem 0.875rem",
-              background: triggerOk ? "rgba(57,211,83,0.07)" : "rgba(248,81,73,0.07)",
-              border: `1px solid ${triggerOk ? "var(--border-hi)" : "rgba(248,81,73,0.25)"}`,
+              background: triggerOk ? "rgba(74,222,128,0.07)" : "rgba(248,81,73,0.07)",
+              border: `1px solid ${triggerOk ? "rgba(74,222,128,0.3)" : "rgba(248,81,73,0.25)"}`,
               borderRadius: "6px",
               color: triggerOk ? "var(--bright)" : "var(--danger)",
               fontSize: "0.8rem", fontFamily: "'DM Mono', monospace",
@@ -383,7 +396,7 @@ function DashboardInner() {
                 <div key={i} style={{
                   display: "flex", justifyContent: "space-between", alignItems: "center",
                   padding: "0.875rem 1rem",
-                  background: "rgba(4,14,8,0.6)",
+                  background: "rgba(13,17,23,0.7)",
                   border: "1px solid var(--border)",
                   borderRadius: "8px", gap: "1rem", flexWrap: "wrap",
                   transition: "border-color 0.15s",
@@ -484,6 +497,24 @@ function DashboardInner() {
         </div>
       </div>
     </main>
+  );
+}
+
+function LogoMark() {
+  return (
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lgBg3" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#1565C0" />
+          <stop offset="1" stopColor="#0D47A1" />
+        </linearGradient>
+      </defs>
+      <rect width="32" height="32" rx="8" fill="url(#lgBg3)" />
+      <rect x="6" y="20" width="4" height="6" rx="1" fill="rgba(255,255,255,0.4)" />
+      <rect x="11" y="15" width="4" height="11" rx="1" fill="rgba(255,255,255,0.6)" />
+      <rect x="16" y="10" width="4" height="16" rx="1" fill="rgba(255,255,255,0.85)" />
+      <path d="M22 12 L26 8 M26 8 H22 M26 8 V12" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 
