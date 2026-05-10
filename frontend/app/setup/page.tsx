@@ -385,19 +385,7 @@ export default function SetupPage() {
 
 function LogoMark() {
   return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="lgBg2" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#1565C0" />
-          <stop offset="1" stopColor="#0D47A1" />
-        </linearGradient>
-      </defs>
-      <rect width="32" height="32" rx="8" fill="url(#lgBg2)" />
-      <rect x="6" y="20" width="4" height="6" rx="1" fill="rgba(255,255,255,0.4)" />
-      <rect x="11" y="15" width="4" height="11" rx="1" fill="rgba(255,255,255,0.6)" />
-      <rect x="16" y="10" width="4" height="16" rx="1" fill="rgba(255,255,255,0.85)" />
-      <path d="M22 12 L26 8 M26 8 H22 M26 8 V12" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <img src="/logo.png" alt="AutoShare" width={36} height={36} style={{ objectFit: "contain" }} />
   );
 }
 
