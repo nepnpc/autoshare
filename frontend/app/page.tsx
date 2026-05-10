@@ -114,7 +114,7 @@ export default function LandingPage() {
             background: "var(--bright)", display: "inline-block",
             animation: "pulseGlowGreen 2s ease infinite",
           }} />
-          BOT RUNNING DAILY · AUTOMATED
+          ONE-TIME SETUP · RUNS FOREVER
         </div>
 
         <h1 className="anim-fade-up anim-delay-1" style={{
@@ -125,17 +125,18 @@ export default function LandingPage() {
         }}>
           Never miss<br />
           <span style={{
+            fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 300,
             background: "linear-gradient(135deg, var(--blue-hi) 0%, var(--bright) 100%)",
             WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
           }}>an IPO.</span>
         </h1>
 
         <p className="anim-fade-up anim-delay-2" style={{
-          fontSize: "1.15rem", color: "var(--muted)", maxWidth: "460px",
-          lineHeight: 1.7, marginBottom: "0.5rem",
+          fontFamily: "'Fraunces', serif", fontStyle: "italic", fontWeight: 300,
+          fontSize: "1.25rem", color: "var(--muted)", maxWidth: "420px",
+          lineHeight: 1.6, marginBottom: "0.75rem", letterSpacing: "0.01em",
         }}>
-          AutoShare applies for every Nepal Ordinary Share IPO automatically.
-          Daily. Free. Forever.
+          Never miss to apply an IPO — every Ordinary Share, every account, every morning.
         </p>
         <p className="anim-fade-up anim-delay-2" style={{
           fontSize: "0.82rem", color: "var(--dim)", marginBottom: "3rem",
@@ -144,7 +145,7 @@ export default function LandingPage() {
           Your password never leaves GitHub&apos;s encrypted secrets vault.
         </p>
 
-        <div className="anim-fade-up anim-delay-3" style={{ display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "center", marginBottom: "5rem" }}>
+        <div className="anim-fade-up anim-delay-3" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.875rem", marginBottom: "5rem" }}>
           <button onClick={handleConnect} disabled={loading} style={{
             display: "flex", alignItems: "center", gap: "0.625rem",
             padding: "0.9rem 2.25rem", borderRadius: "10px",
@@ -160,6 +161,9 @@ export default function LandingPage() {
             <GitHubIcon />
             {loading ? "Connecting…" : "Connect with GitHub — Free"}
           </button>
+          <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.68rem", color: "var(--dim)", letterSpacing: "0.06em" }}>
+            ✓ One-time setup &nbsp;·&nbsp; No daily actions &nbsp;·&nbsp; Free forever
+          </p>
         </div>
 
         {/* Stats */}
