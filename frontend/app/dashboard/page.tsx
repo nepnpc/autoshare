@@ -499,7 +499,13 @@ function DashboardInner() {
 
 function LogoMark() {
   return (
-    <img src="/logo.png" alt="AutoShare" width={36} height={36} style={{ objectFit: "contain" }} />
+    <div style={{
+      width: 38, height: 38, borderRadius: 9, overflow: "hidden",
+      background: "#fff", flexShrink: 0,
+      display: "flex", alignItems: "center", justifyContent: "center",
+    }}>
+      <img src="/logo.png" alt="AutoShare" width={36} height={36} style={{ objectFit: "contain", display: "block" }} />
+    </div>
   );
 }
 
