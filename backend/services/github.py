@@ -94,10 +94,26 @@ async def set_secret(token: str, owner: str, repo: str, name: str, value: str) -
         r2.raise_for_status()
 
 
-async def trigger_workflow(token: str, owner: str, repo: str) -> None:
+async def delete_file(token: str, owner: str, repo: str, path: str) -> None:
+    async with httpx.AsyncClient() as c:
+        r = await c.get(f"{BASE}/repos/{owner}/{repo}/contents/{path}", headers=_auth(token))
+        if r.status_code == 404:
+            return
+        r.raise_for_status()
+        sha = r.json()["sha"]
+        r2 = await c.delete(
+            f"{BASE}/repos/{owner}/{repo}/contents/{path}",
+            headers=_auth(token),
+            json={"message": f"AutoShare: remove {path}", "sha": sha},
+        )
+        if r2.status_code not in (200, 404):
+            r2.raise_for_status()
+
+
+async def trigger_workflow(token: str, owner: str, repo: str, workflow_id: str = "bot.yml") -> None:
     async with httpx.AsyncClient() as c:
         r = await c.post(
-            f"{BASE}/repos/{owner}/{repo}/actions/workflows/bot.yml/dispatches",
+            f"{BASE}/repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches",
             headers=_auth(token),
             json={"ref": "main"},
         )

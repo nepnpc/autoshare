@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
-from models import User, IpoRun
+from models import User, IpoRun, AccountMeta
 from services import github as gh
 from services.crypto import decrypt
 from auth_utils import get_current_user
@@ -41,19 +41,40 @@ async def get_status(
 
 @router.post("/bot/trigger")
 @limiter.limit("5/minute")
-async def trigger_bot(request: Request, user: User = Depends(get_current_user)):
+async def trigger_bot(
+    request: Request,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
     if user.status != "active":
         raise HTTPException(status_code=400, detail="Bot not active — complete setup first")
     if not user.github_access_token_enc:
         raise HTTPException(status_code=400, detail="No GitHub token")
 
     token = decrypt(user.github_access_token_enc)
-    try:
-        await gh.trigger_workflow(token, user.github_username, user.github_repo_name)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Trigger failed: {e}")
+    result = await db.execute(
+        select(AccountMeta).where(AccountMeta.user_id == user.id).order_by(AccountMeta.position)
+    )
+    accounts = result.scalars().all()
+    n = len(accounts) or 1
 
-    return {"message": "Bot triggered. Check GitHub Actions in ~30 seconds."}
+    triggered = 0
+    for i in range(n):
+        try:
+            await gh.trigger_workflow(token, user.github_username, user.github_repo_name, f"bot-{i}.yml")
+            triggered += 1
+        except Exception:
+            pass
+
+    if triggered == 0:
+        # Fallback: legacy single bot.yml
+        try:
+            await gh.trigger_workflow(token, user.github_username, user.github_repo_name)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Trigger failed: {e}")
+        return {"message": "Bot triggered. Check GitHub Actions in ~30 seconds."}
+
+    return {"message": f"Triggered {triggered} of {n} workflow(s). Check GitHub Actions in ~30 seconds."}
 
 
 @router.delete("/account")

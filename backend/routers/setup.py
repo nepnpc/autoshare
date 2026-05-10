@@ -87,16 +87,7 @@ async def save_credentials(
     user.status = "active"
     await db.commit()
 
-    from routers.auth import _build_workflow
-    try:
-        await gh.push_file(
-            token, owner, repo,
-            ".github/workflows/bot.yml",
-            _build_workflow(settings.docker_image),
-            "AutoShare: update bot workflow",
-        )
-    except Exception:
-        pass
+    await _push_staggered_workflows(token, owner, repo, len(body.accounts))
 
     return {
         "status": "active",
@@ -105,26 +96,47 @@ async def save_credentials(
     }
 
 
+async def _push_staggered_workflows(token: str, owner: str, repo: str, n: int) -> None:
+    from routers.auth import _build_workflow_for_account, _compute_base_minute
+    base_minute = _compute_base_minute(n)
+    # Delete stale files (best effort)
+    stale = [".github/workflows/bot.yml"] + [f".github/workflows/bot-{i}.yml" for i in range(8)]
+    for path in stale:
+        try:
+            await gh.delete_file(token, owner, repo, path)
+        except Exception:
+            pass
+    # Push per-account workflow files
+    for i in range(n):
+        try:
+            await gh.push_file(
+                token, owner, repo,
+                f".github/workflows/bot-{i}.yml",
+                _build_workflow_for_account(settings.docker_image, i, n, base_minute),
+                f"AutoShare: update workflow (account {i})",
+            )
+        except Exception:
+            pass
+
+
 @router.post("/refresh-workflow")
 async def refresh_workflow(
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    """Re-push the latest workflow YAML to the user's repo."""
+    """Re-push the latest per-account workflow YAMLs to the user's repo."""
     if not user.github_access_token_enc or not user.github_repo_name:
         raise HTTPException(status_code=400, detail="GitHub repo not set up yet")
-    from routers.auth import _build_workflow
     token = decrypt(user.github_access_token_enc)
+    result = await db.execute(
+        select(AccountMeta).where(AccountMeta.user_id == user.id).order_by(AccountMeta.position)
+    )
+    n = len(result.scalars().all()) or 1
     try:
-        await gh.push_file(
-            token, user.github_username, user.github_repo_name,
-            ".github/workflows/bot.yml",
-            _build_workflow(settings.docker_image),
-            "AutoShare: refresh bot workflow",
-        )
+        await _push_staggered_workflows(token, user.github_username, user.github_repo_name, n)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to update workflow: {e}")
-    return {"status": "ok", "message": "Workflow updated. Re-trigger the bot run."}
+        raise HTTPException(status_code=500, detail=f"Failed to update workflows: {e}")
+    return {"status": "ok", "message": f"Workflows updated for {n} account(s). Re-trigger the bot run."}
 
 
 @router.delete("/accounts/{position}")

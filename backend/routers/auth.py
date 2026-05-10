@@ -121,14 +121,61 @@ async def me(user: User = Depends(get_current_user)):
     }
 
 
+def _nst_label(utc_minute: int) -> str:
+    nst = (utc_minute + 345) % 1440
+    h, m = nst // 60, nst % 60
+    suffix = "AM" if h < 12 else "PM"
+    return f"{h % 12 or 12}:{m:02d} {suffix} Nepal time"
+
+
+def _compute_base_minute(total_accounts: int) -> int:
+    interval = 1440 // max(total_accounts, 1)
+    return random.randint(0, max(interval - 1, 0))
+
+
+def _build_workflow_for_account(docker_image: str, account_index: int, total_accounts: int, base_minute: int) -> str:
+    interval = 1440 // max(total_accounts, 1)
+    utc_minute = (base_minute + account_index * interval) % 1440
+    cron = f"{utc_minute % 60} {utc_minute // 60} * * *"
+    label = _nst_label(utc_minute)
+    i = account_index
+    return f"""\
+# AutoShare IPO Bot (account {i}) — auto-generated, do not edit manually
+name: AutoShare IPO Bot (account {i})
+
+on:
+  schedule:
+    - cron: '{cron}'  # {label}
+  workflow_dispatch:
+
+jobs:
+  apply-ipo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Login to GitHub Container Registry
+        run: echo "${{{{ secrets.GHCR_PAT }}}}" | docker login ghcr.io -u nepnpc --password-stdin
+
+      - name: Apply for open IPOs
+        env:
+          MEROSHARE_ACCOUNT_{i}: ${{{{ secrets.MEROSHARE_ACCOUNT_{i} }}}}
+          AUTOSHARE_WEBHOOK: ${{{{ secrets.AUTOSHARE_WEBHOOK }}}}
+        run: |
+          python3 -c "import os,json;v=os.environ.get('MEROSHARE_ACCOUNT_{i}','');a=[json.loads(v)] if v else [];print(json.dumps(a))" > /tmp/accounts.json
+          docker run --rm \\
+            -e MEROSHARE_ACCOUNTS="$(cat /tmp/accounts.json)" \\
+            -e AUTOSHARE_WEBHOOK \\
+            {docker_image}
+"""
+
+
 def _build_workflow(docker_image: str) -> str:
+    """Placeholder workflow pushed at OAuth time (before accounts are configured)."""
     nst_hour = random.randint(5, 21)
     utc_minutes = (nst_hour * 60 - 345) % 1440
     cron = f"{utc_minutes % 60} {utc_minutes // 60} * * *"
-    suffix = "AM" if nst_hour < 12 else "PM"
-    h = nst_hour % 12 or 12
-    label = f"{h}:00 {suffix} Nepal time (UTC+5:45)"
-    # Pre-generate per-account env var lines (supports up to 8 accounts)
+    label = _nst_label(utc_minutes)
     acct_env = "\n".join(
         f"          MEROSHARE_ACCOUNT_{i}: ${{{{ secrets.MEROSHARE_ACCOUNT_{i} }}}}"
         for i in range(8)
