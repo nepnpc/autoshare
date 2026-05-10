@@ -1,6 +1,8 @@
+import hashlib
+import hmac
 import random
 import secrets
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from config import settings
@@ -9,15 +11,34 @@ from models import User
 from services import github as gh
 from services.crypto import encrypt
 from auth_utils import create_token, get_current_user
+from main import limiter
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 REPO_NAME = "autoshare-ipo-bot"
 
 
+def _sign_state(token: str) -> str:
+    return hmac.new(settings.jwt_secret.encode(), token.encode(), hashlib.sha256).hexdigest()  # type: ignore[attr-defined]
+
+
+def _make_state() -> str:
+    token = secrets.token_urlsafe(16)
+    return f"{token}.{_sign_state(token)}"
+
+
+def _verify_state(state: str) -> bool:
+    parts = state.split(".", 1)
+    if len(parts) != 2:
+        return False
+    token, sig = parts
+    return hmac.compare_digest(sig, _sign_state(token))
+
+
 @router.get("/login")
-async def login():
-    state = secrets.token_urlsafe(16)
+@limiter.limit("20/minute")
+async def login(request: Request):
+    state = _make_state()
     url = (
         "https://github.com/login/oauth/authorize"
         f"?client_id={settings.github_client_id}"
@@ -29,11 +50,16 @@ async def login():
 
 
 @router.get("/callback")
+@limiter.limit("20/minute")
 async def callback(
+    request: Request,
     code: str = Query(...),
     state: str = Query(...),
     db: AsyncSession = Depends(get_db),
 ):
+    if not _verify_state(state):
+        raise HTTPException(status_code=400, detail="Invalid OAuth state")
+
     try:
         token = await gh.exchange_code(settings.github_client_id, settings.github_client_secret, code)
         user_data = await gh.get_user(token)

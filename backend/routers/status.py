@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
@@ -6,6 +6,7 @@ from models import User, IpoRun
 from services import github as gh
 from services.crypto import decrypt
 from auth_utils import get_current_user
+from main import limiter
 
 router = APIRouter(tags=["status"])
 
@@ -39,7 +40,8 @@ async def get_status(
 
 
 @router.post("/bot/trigger")
-async def trigger_bot(user: User = Depends(get_current_user)):
+@limiter.limit("5/minute")
+async def trigger_bot(request: Request, user: User = Depends(get_current_user)):
     if user.status != "active":
         raise HTTPException(status_code=400, detail="Bot not active — complete setup first")
     if not user.github_access_token_enc:
@@ -63,8 +65,9 @@ async def delete_account(
         token = decrypt(user.github_access_token_enc)
         try:
             await gh.delete_repo(token, user.github_username, user.github_repo_name)
-        except Exception:
-            pass
+        except Exception as e:
+            import logging
+            logging.warning("Failed to delete GitHub repo for %s: %s", user.github_username, e)
 
     await db.execute(delete(IpoRun).where(IpoRun.user_id == user.id))
     await db.delete(user)

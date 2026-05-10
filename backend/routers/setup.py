@@ -1,5 +1,5 @@
 import json
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -9,6 +9,7 @@ from models import User, AccountMeta
 from services import github as gh
 from services.crypto import decrypt
 from auth_utils import get_current_user
+from main import limiter
 
 router = APIRouter(prefix="/setup", tags=["setup"])
 
@@ -42,7 +43,9 @@ async def get_accounts(
 
 
 @router.post("/credentials")
+@limiter.limit("10/minute")
 async def save_credentials(
+    request: Request,
     body: CredentialsRequest,
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),

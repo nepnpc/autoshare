@@ -42,7 +42,7 @@ async def run_complete(
     user.last_run_at = now
     user.last_run_status = run_status
 
-    for r in body.results:
+    for r in body.results[:50]:
         db.add(IpoRun(
             user_id=user.id,
             ipo_name=r.get("ipo_name"),
