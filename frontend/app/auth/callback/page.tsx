@@ -40,11 +40,8 @@ function CallbackInner() {
       {/* Grid */}
       <div style={{
         position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none",
-        backgroundImage: `
-          linear-gradient(rgba(29,111,235,0.04) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(29,111,235,0.04) 1px, transparent 1px)
-        `,
-        backgroundSize: "48px 48px",
+        backgroundImage: "radial-gradient(rgba(240,246,252,0.04) 1px, transparent 1px)",
+        backgroundSize: "32px 32px",
       }} />
       {/* Glow */}
       <div style={{

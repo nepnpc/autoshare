@@ -30,9 +30,9 @@
   /* Status */
   --danger:    #f85149;
 
-  /* Borders */
-  --border:    rgba(29, 111, 235, 0.15);
-  --border-hi: rgba(77, 148, 255, 0.40);
+  /* Borders — neutral white, never colored */
+  --border:    rgba(240, 246, 252, 0.07);
+  --border-hi: rgba(240, 246, 252, 0.18);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -55,12 +55,6 @@ body {
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--blue-deep); border-radius: 2px; }
-
-/* Ticker */
-@keyframes ticker {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
 
 /* Fade-up stagger */
 @keyframes fadeUp {

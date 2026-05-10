@@ -4,26 +4,20 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getLoginUrl, isLoggedIn } from "@/lib/api";
 
-const TICKER_ITEMS = [
-  "TPKHL +12.4%", "NABIL +3.2%", "GBIME +8.7%", "SICL +5.1%",
-  "UPPER +19.3%", "RURU +6.8%", "MERO +4.4%", "CHDC +11.2%",
-  "SHINE +7.9%", "NRIC +2.6%", "HIDCL +9.1%", "NMB +3.8%",
-];
-
 const STEPS = [
   {
     n: "01",
     icon: <ConnectIcon />,
     title: "Connect GitHub",
     desc: "One click OAuth. GitHub becomes your secure vault — not us.",
-    accent: "var(--blue)",
+    accent: "var(--blue-hi)",
   },
   {
     n: "02",
     icon: <AccountIcon />,
     title: "Add your accounts",
     desc: "Enter all Meroshare accounts. DP, username, password, CRN, PIN.",
-    accent: "var(--glow)",
+    accent: "var(--bright)",
   },
   {
     n: "03",
@@ -60,76 +54,43 @@ export default function LandingPage() {
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", overflow: "hidden" }}>
 
-      {/* Grid background — subtle blue tint */}
+      {/* Subtle dot grid */}
       <div style={{
         position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none",
-        backgroundImage: `
-          linear-gradient(rgba(29,111,235,0.04) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(29,111,235,0.04) 1px, transparent 1px)
-        `,
-        backgroundSize: "48px 48px",
+        backgroundImage: "radial-gradient(rgba(240,246,252,0.04) 1px, transparent 1px)",
+        backgroundSize: "32px 32px",
       }} />
 
-      {/* Dual glow — blue left + green right (matches logo) */}
+      {/* Blue glow — top center */}
       <div style={{
-        position: "fixed", top: "-15%", left: "30%", transform: "translateX(-50%)",
-        width: "700px", height: "600px", borderRadius: "50%",
-        background: "radial-gradient(ellipse, rgba(29,111,235,0.18) 0%, transparent 70%)",
+        position: "fixed", top: "-20%", left: "50%", transform: "translateX(-50%)",
+        width: "800px", height: "600px", borderRadius: "50%",
+        background: "radial-gradient(ellipse, rgba(29,111,235,0.12) 0%, transparent 65%)",
         pointerEvents: "none", zIndex: 0,
       }} />
+      {/* Green glow — top right */}
       <div style={{
-        position: "fixed", top: "-10%", right: "-5%",
-        width: "500px", height: "500px", borderRadius: "50%",
-        background: "radial-gradient(ellipse, rgba(34,197,94,0.10) 0%, transparent 70%)",
+        position: "fixed", top: "-10%", right: "-8%",
+        width: "450px", height: "450px", borderRadius: "50%",
+        background: "radial-gradient(ellipse, rgba(34,197,94,0.07) 0%, transparent 65%)",
         pointerEvents: "none", zIndex: 0,
       }} />
-      {/* Orange accent glow — bottom left */}
-      <div style={{
-        position: "fixed", bottom: "-10%", left: "-5%",
-        width: "400px", height: "400px", borderRadius: "50%",
-        background: "radial-gradient(ellipse, rgba(240,136,62,0.07) 0%, transparent 70%)",
-        pointerEvents: "none", zIndex: 0,
-      }} />
-
-      {/* Ticker */}
-      <div style={{
-        borderBottom: "1px solid var(--border)",
-        background: "rgba(13,17,23,0.95)",
-        backdropFilter: "blur(8px)", overflow: "hidden", position: "relative", zIndex: 10,
-        padding: "0.5rem 0",
-      }}>
-        <div style={{
-          display: "flex", gap: "3rem", whiteSpace: "nowrap",
-          animation: "ticker 30s linear infinite",
-          width: "max-content",
-        }}>
-          {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
-            <span key={i} style={{
-              fontFamily: "'DM Mono', monospace", fontSize: "0.75rem",
-              color: item.includes("+") ? "var(--bright)" : "var(--danger)",
-              letterSpacing: "0.05em",
-            }}>
-              {item}
-            </span>
-          ))}
-        </div>
-      </div>
 
       {/* Nav */}
       <nav style={{
         display: "flex", justifyContent: "space-between", alignItems: "center",
         padding: "1.25rem 3rem", position: "relative", zIndex: 10,
         borderBottom: "1px solid var(--border)",
-        backdropFilter: "blur(12px)", background: "rgba(13,17,23,0.82)",
+        backdropFilter: "blur(12px)", background: "rgba(13,17,23,0.80)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
           <LogoMark />
-          <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "1.15rem", color: "var(--text)", letterSpacing: "-0.01em" }}>
+          <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "1.15rem", letterSpacing: "-0.01em" }}>
             <span style={{ color: "var(--blue-hi)" }}>Auto</span><span style={{ color: "var(--bright)" }}>Share</span>
           </span>
           <span style={{
-            fontFamily: "'DM Mono', monospace", fontSize: "0.65rem",
-            background: "rgba(29,111,235,0.12)", border: "1px solid var(--border-hi)",
+            fontFamily: "'DM Mono', monospace", fontSize: "0.62rem",
+            background: "rgba(29,111,235,0.15)", border: "1px solid rgba(29,111,235,0.3)",
             color: "var(--blue-hi)", padding: "0.15rem 0.5rem", borderRadius: "999px",
           }}>BETA</span>
         </div>
@@ -137,29 +98,29 @@ export default function LandingPage() {
           fontFamily: "'Outfit', sans-serif", fontSize: "0.875rem", fontWeight: 500,
           padding: "0.5rem 1.25rem", borderRadius: "6px",
           background: "transparent", border: "1px solid var(--border-hi)",
-          color: "var(--blue-hi)", cursor: "pointer",
+          color: "var(--muted)", cursor: "pointer",
           transition: "all 0.2s",
         }}
-          onMouseEnter={e => { e.currentTarget.style.background = "rgba(29,111,235,0.1)"; e.currentTarget.style.color = "var(--text)"; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--blue-hi)"; }}
+          onMouseEnter={e => { e.currentTarget.style.background = "rgba(240,246,252,0.06)"; e.currentTarget.style.color = "var(--text)"; e.currentTarget.style.borderColor = "var(--border-hi)"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--muted)"; e.currentTarget.style.borderColor = "var(--border-hi)"; }}
         >
-          {loading ? "…" : "Connect GitHub →"}
+          {loading ? "…" : "Sign in →"}
         </button>
       </nav>
 
       {/* Hero */}
       <section style={{
         position: "relative", zIndex: 5,
-        padding: "7rem 2rem 5rem",
+        padding: "6rem 2rem 4rem",
         textAlign: "center",
         display: "flex", flexDirection: "column", alignItems: "center",
       }}>
 
         <div className="anim-fade-up" style={{
           display: "inline-flex", alignItems: "center", gap: "0.5rem",
-          fontFamily: "'DM Mono', monospace", fontSize: "0.75rem",
+          fontFamily: "'DM Mono', monospace", fontSize: "0.72rem",
           color: "var(--muted)", letterSpacing: "0.1em",
-          background: "rgba(29,111,235,0.06)", border: "1px solid var(--border)",
+          background: "rgba(74,222,128,0.06)", border: "1px solid rgba(74,222,128,0.18)",
           padding: "0.4rem 1rem", borderRadius: "999px", marginBottom: "2rem",
         }}>
           <span style={{
@@ -184,36 +145,35 @@ export default function LandingPage() {
         </h1>
 
         <p className="anim-fade-up anim-delay-2" style={{
-          fontSize: "1.2rem", color: "var(--muted)", maxWidth: "480px",
+          fontSize: "1.15rem", color: "var(--muted)", maxWidth: "460px",
           lineHeight: 1.7, marginBottom: "0.5rem",
         }}>
           AutoShare applies for every Nepal Ordinary Share IPO automatically.
           Daily. Free. Forever.
         </p>
         <p className="anim-fade-up anim-delay-2" style={{
-          fontSize: "0.875rem", color: "var(--dim)", marginBottom: "3rem",
+          fontSize: "0.82rem", color: "var(--dim)", marginBottom: "3rem",
           fontFamily: "'DM Mono', monospace",
         }}>
           Your password never leaves GitHub&apos;s encrypted secrets vault.
         </p>
 
-        <div className="anim-fade-up anim-delay-3" style={{ display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "center" }}>
+        <div className="anim-fade-up anim-delay-3" style={{ display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "center", marginBottom: "4rem" }}>
           <button onClick={handleConnect} disabled={loading} style={{
             display: "flex", alignItems: "center", gap: "0.625rem",
             padding: "0.9rem 2.25rem", borderRadius: "10px",
             fontSize: "1rem", fontWeight: 600, fontFamily: "'Outfit', sans-serif",
             background: "linear-gradient(135deg, var(--blue) 0%, var(--glow) 100%)",
             color: "#fff", border: "none", cursor: loading ? "not-allowed" : "pointer",
-            boxShadow: "0 0 36px rgba(29,111,235,0.35), 0 0 60px rgba(34,197,94,0.12)",
+            boxShadow: "0 4px 24px rgba(29,111,235,0.30), 0 0 48px rgba(34,197,94,0.10)",
             transition: "all 0.25s", opacity: loading ? 0.7 : 1,
-            letterSpacing: "0.01em",
           }}
             onMouseEnter={e => {
-              e.currentTarget.style.boxShadow = "0 0 56px rgba(29,111,235,0.5), 0 0 80px rgba(34,197,94,0.2)";
+              e.currentTarget.style.boxShadow = "0 6px 36px rgba(29,111,235,0.45), 0 0 60px rgba(34,197,94,0.18)";
               e.currentTarget.style.transform = "translateY(-2px)";
             }}
             onMouseLeave={e => {
-              e.currentTarget.style.boxShadow = "0 0 36px rgba(29,111,235,0.35), 0 0 60px rgba(34,197,94,0.12)";
+              e.currentTarget.style.boxShadow = "0 4px 24px rgba(29,111,235,0.30), 0 0 48px rgba(34,197,94,0.10)";
               e.currentTarget.style.transform = "translateY(0)";
             }}
           >
@@ -222,9 +182,59 @@ export default function LandingPage() {
           </button>
         </div>
 
-        {/* Stats row — three logo colors */}
+        {/* Bot run preview card */}
         <div className="anim-fade-up anim-delay-4" style={{
-          display: "flex", gap: "4rem", marginTop: "4.5rem",
+          background: "var(--card)",
+          border: "1px solid var(--border)",
+          borderRadius: "14px",
+          overflow: "hidden",
+          width: "100%", maxWidth: "420px",
+          boxShadow: "0 24px 64px rgba(0,0,0,0.4)",
+        }}>
+          {/* Card header */}
+          <div style={{
+            padding: "0.875rem 1.25rem",
+            borderBottom: "1px solid var(--border)",
+            display: "flex", justifyContent: "space-between", alignItems: "center",
+            background: "rgba(240,246,252,0.02)",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "var(--bright)", display: "inline-block", animation: "pulseGlowGreen 2s ease infinite" }} />
+              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.68rem", color: "var(--muted)", letterSpacing: "0.08em" }}>BOT RUN LOG</span>
+            </div>
+            <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.65rem", color: "var(--dim)" }}>TODAY · 6:15 AM NST</span>
+          </div>
+          {/* Run rows */}
+          {[
+            { status: "applied", name: "NRIC Hydropower IPO", color: "var(--bright)" },
+            { status: "applied", name: "Kumari Life Insurance IPO", color: "var(--bright)" },
+            { status: "no_ipos",  name: "No new IPOs open",  color: "var(--dim)" },
+          ].map((r, i) => (
+            <div key={i} style={{
+              padding: "0.875rem 1.25rem",
+              borderBottom: i < 2 ? "1px solid var(--border)" : "none",
+              display: "flex", justifyContent: "space-between", alignItems: "center",
+            }}>
+              <span style={{ fontSize: "0.88rem", color: r.status === "no_ipos" ? "var(--dim)" : "var(--text)", fontFamily: "'Outfit', sans-serif" }}>
+                {r.name}
+              </span>
+              <span style={{
+                fontFamily: "'DM Mono', monospace", fontSize: "0.72rem",
+                color: r.color, fontWeight: 500,
+                background: r.status === "applied" ? "rgba(74,222,128,0.08)" : "transparent",
+                padding: r.status === "applied" ? "0.15rem 0.6rem" : "0",
+                borderRadius: "999px",
+                border: r.status === "applied" ? "1px solid rgba(74,222,128,0.2)" : "none",
+              }}>
+                {r.status === "applied" ? "✓ Applied" : "—"}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Stats row */}
+        <div className="anim-fade-up anim-delay-5" style={{
+          display: "flex", gap: "4rem", marginTop: "3.5rem",
           flexWrap: "wrap", justifyContent: "center",
         }}>
           {[
@@ -236,9 +246,8 @@ export default function LandingPage() {
               <div style={{
                 fontFamily: "'Syne', sans-serif", fontWeight: 800,
                 fontSize: "2.25rem", color,
-                textShadow: `0 0 20px ${color}40`,
               }}>{n}</div>
-              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.72rem", color: "var(--dim)", letterSpacing: "0.06em", marginTop: "0.25rem" }}>{label}</div>
+              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.7rem", color: "var(--dim)", letterSpacing: "0.06em", marginTop: "0.25rem" }}>{label}</div>
             </div>
           ))}
         </div>
@@ -247,11 +256,9 @@ export default function LandingPage() {
       {/* Steps */}
       <section style={{
         position: "relative", zIndex: 5,
-        padding: "4rem 2rem 6rem", maxWidth: "1060px", margin: "0 auto",
+        padding: "3rem 2rem 6rem", maxWidth: "1060px", margin: "0 auto",
       }}>
-        <div style={{
-          display: "flex", alignItems: "center", gap: "1rem", marginBottom: "3rem",
-        }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "3rem" }}>
           <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
           <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.72rem", color: "var(--dim)", letterSpacing: "0.12em" }}>HOW IT WORKS</span>
           <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
@@ -268,8 +275,8 @@ export default function LandingPage() {
               cursor: "default",
             }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLDivElement).style.borderColor = accent;
-                (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 32px ${accent}18`;
+                (e.currentTarget as HTMLDivElement).style.borderColor = `${accent}50`;
+                (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 40px ${accent}12`;
                 (e.currentTarget as HTMLDivElement).style.transform = "translateY(-2px)";
               }}
               onMouseLeave={e => {
@@ -278,29 +285,14 @@ export default function LandingPage() {
                 (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
               }}
             >
-              {/* Step number */}
-              <div style={{
-                fontFamily: "'DM Mono', monospace", fontSize: "0.68rem",
-                color: accent, letterSpacing: "0.12em", marginBottom: "1.25rem",
-                opacity: 0.8,
-              }}>{n}</div>
-
-              {/* Icon */}
-              <div style={{ marginBottom: "1rem", color: accent }}>
-                {icon}
-              </div>
-
-              <h3 style={{
-                fontFamily: "'Syne', sans-serif", fontWeight: 700,
-                fontSize: "1.2rem", color: "var(--text)", marginBottom: "0.75rem",
-              }}>{title}</h3>
+              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.68rem", color: accent, letterSpacing: "0.12em", marginBottom: "1.25rem", opacity: 0.8 }}>{n}</div>
+              <div style={{ marginBottom: "1rem", color: accent }}>{icon}</div>
+              <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: "1.2rem", color: "var(--text)", marginBottom: "0.75rem" }}>{title}</h3>
               <p style={{ color: "var(--muted)", fontSize: "0.9rem", lineHeight: 1.7 }}>{desc}</p>
-
-              {/* Corner gradient */}
               <div style={{
                 position: "absolute", bottom: 0, right: 0,
                 width: "100px", height: "100px",
-                background: `radial-gradient(circle at 100% 100%, ${accent}10 0%, transparent 70%)`,
+                background: `radial-gradient(circle at 100% 100%, ${accent}0d 0%, transparent 70%)`,
               }} />
             </div>
           ))}
@@ -310,8 +302,7 @@ export default function LandingPage() {
       {/* Security strip */}
       <div style={{
         borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)",
-        background: "rgba(18,26,40,0.7)",
-        backdropFilter: "blur(8px)",
+        background: "rgba(240,246,252,0.02)",
         padding: "1.75rem 2rem",
         display: "flex", justifyContent: "center", gap: "3rem",
         flexWrap: "wrap", position: "relative", zIndex: 5,
@@ -323,15 +314,13 @@ export default function LandingPage() {
         ].map(({ icon, text }) => (
           <div key={text} style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
             <span style={{ color: "var(--blue-hi)", flexShrink: 0 }}>{icon}</span>
-            <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.75rem", color: "var(--muted)", letterSpacing: "0.04em" }}>{text}</span>
+            <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.74rem", color: "var(--muted)", letterSpacing: "0.04em" }}>{text}</span>
           </div>
         ))}
       </div>
 
       {/* Footer */}
-      <footer style={{
-        padding: "2rem", textAlign: "center", position: "relative", zIndex: 5,
-      }}>
+      <footer style={{ padding: "2rem", textAlign: "center", position: "relative", zIndex: 5 }}>
         <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.7rem", color: "var(--dim)" }}>
           © 2026 AutoShare · Built for Nepal investors · Free forever
         </p>
@@ -344,7 +333,7 @@ export default function LandingPage() {
 
 function LogoMark() {
   return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
       <defs>
         <linearGradient id="lgBg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
           <stop stopColor="#1565C0" />

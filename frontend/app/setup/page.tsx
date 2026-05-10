@@ -78,18 +78,15 @@ export default function SetupPage() {
       {/* Grid background */}
       <div style={{
         position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none",
-        backgroundImage: `
-          linear-gradient(rgba(29,111,235,0.04) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(29,111,235,0.04) 1px, transparent 1px)
-        `,
-        backgroundSize: "48px 48px",
+        backgroundImage: "radial-gradient(rgba(240,246,252,0.04) 1px, transparent 1px)",
+        backgroundSize: "32px 32px",
       }} />
 
       {/* Glow */}
       <div style={{
         position: "fixed", top: "-10%", left: "50%", transform: "translateX(-50%)",
         width: "600px", height: "500px", borderRadius: "50%",
-        background: "radial-gradient(ellipse, rgba(29,111,235,0.14) 0%, transparent 70%)",
+        background: "radial-gradient(ellipse, rgba(29,111,235,0.10) 0%, transparent 70%)",
         pointerEvents: "none", zIndex: 0,
       }} />
       <div style={{
@@ -143,7 +140,7 @@ export default function SetupPage() {
             display: "inline-flex", alignItems: "center", gap: "0.5rem",
             fontFamily: "'DM Mono', monospace", fontSize: "0.7rem",
             color: "var(--muted)", letterSpacing: "0.12em",
-            background: "rgba(29,111,235,0.06)", border: "1px solid var(--border)",
+            background: "rgba(74,222,128,0.05)", border: "1px solid rgba(74,222,128,0.15)",
             padding: "0.35rem 0.875rem", borderRadius: "999px", marginBottom: "1.25rem",
           }}>
             <span style={{
@@ -233,8 +230,8 @@ export default function SetupPage() {
                     placeholder="e.g. 11000"
                     maxLength={5}
                     style={inputStyle()}
-                    onFocus={e => (e.target as HTMLInputElement).style.borderColor = "var(--border-hi)"}
-                    onBlur={e => (e.target as HTMLInputElement).style.borderColor = "rgba(29,111,235,0.18)"}
+                    onFocus={e => (e.target as HTMLInputElement).style.borderColor = "rgba(29,111,235,0.55)"}
+                    onBlur={e => (e.target as HTMLInputElement).style.borderColor = "rgba(240,246,252,0.09)"}
                   />
                   <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.68rem", color: "var(--dim)", marginTop: "0.3rem", display: "block" }}>
                     5-digit bank code · Nabil=11000, NIBL=17000, Everest=19000
@@ -249,8 +246,8 @@ export default function SetupPage() {
                     onChange={e => setField(idx, "meroshare_user", e.target.value)}
                     placeholder="02532993"
                     style={inputStyle()}
-                    onFocus={e => (e.target as HTMLInputElement).style.borderColor = "var(--border-hi)"}
-                    onBlur={e => (e.target as HTMLInputElement).style.borderColor = "rgba(29,111,235,0.18)"}
+                    onFocus={e => (e.target as HTMLInputElement).style.borderColor = "rgba(29,111,235,0.55)"}
+                    onBlur={e => (e.target as HTMLInputElement).style.borderColor = "rgba(240,246,252,0.09)"}
                   />
                 </div>
 
@@ -263,8 +260,8 @@ export default function SetupPage() {
                     onChange={e => setField(idx, "meroshare_pass", e.target.value)}
                     placeholder="••••••••"
                     style={inputStyle()}
-                    onFocus={e => (e.target as HTMLInputElement).style.borderColor = "var(--border-hi)"}
-                    onBlur={e => (e.target as HTMLInputElement).style.borderColor = "rgba(29,111,235,0.18)"}
+                    onFocus={e => (e.target as HTMLInputElement).style.borderColor = "rgba(29,111,235,0.55)"}
+                    onBlur={e => (e.target as HTMLInputElement).style.borderColor = "rgba(240,246,252,0.09)"}
                   />
                 </div>
 
@@ -276,8 +273,8 @@ export default function SetupPage() {
                     onChange={e => setField(idx, "crn", e.target.value)}
                     placeholder="S01795432100"
                     style={inputStyle({ fontFamily: "'DM Mono', monospace" })}
-                    onFocus={e => (e.target as HTMLInputElement).style.borderColor = "var(--border-hi)"}
-                    onBlur={e => (e.target as HTMLInputElement).style.borderColor = "rgba(29,111,235,0.18)"}
+                    onFocus={e => (e.target as HTMLInputElement).style.borderColor = "rgba(29,111,235,0.55)"}
+                    onBlur={e => (e.target as HTMLInputElement).style.borderColor = "rgba(240,246,252,0.09)"}
                   />
                 </div>
 
@@ -291,8 +288,8 @@ export default function SetupPage() {
                     onChange={e => setField(idx, "pin", e.target.value.replace(/\D/g, ""))}
                     placeholder="••••"
                     style={inputStyle({ letterSpacing: "0.5em", textAlign: "center" })}
-                    onFocus={e => (e.target as HTMLInputElement).style.borderColor = "var(--border-hi)"}
-                    onBlur={e => (e.target as HTMLInputElement).style.borderColor = "rgba(29,111,235,0.18)"}
+                    onFocus={e => (e.target as HTMLInputElement).style.borderColor = "rgba(29,111,235,0.55)"}
+                    onBlur={e => (e.target as HTMLInputElement).style.borderColor = "rgba(240,246,252,0.09)"}
                   />
                 </div>
               </div>
@@ -365,7 +362,7 @@ export default function SetupPage() {
         {/* Security note */}
         <div style={{
           marginTop: "1.5rem", padding: "1rem 1.25rem",
-          background: "rgba(29,111,235,0.04)", border: "1px solid var(--border)",
+          background: "rgba(240,246,252,0.02)", border: "1px solid var(--border)",
           borderRadius: "10px", display: "flex", gap: "0.875rem", alignItems: "flex-start",
         }}>
           <span style={{ color: "var(--blue-hi)", flexShrink: 0, marginTop: "0.1rem" }}>
@@ -422,7 +419,7 @@ function inputStyle(extra?: object): React.CSSProperties {
     width: "100%", padding: "0.65rem 0.875rem",
     borderRadius: "7px",
     background: "rgba(13,17,23,0.9)",
-    border: "1px solid rgba(29,111,235,0.18)",
+    border: "1px solid rgba(240,246,252,0.09)",
     color: "var(--text)",
     fontSize: "0.9rem",
     outline: "none",
