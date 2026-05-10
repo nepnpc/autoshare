@@ -1,38 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&family=Fraunces:ital,wght@1,300;1,400;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 :root {
   /* Backgrounds */
-  --bg:        #0d1117;
-  --bg2:       #12181f;
-  --surface:   rgba(18, 26, 40, 0.88);
-  --card:      #161c28;
+  --bg:        #ffffff;
+  --bg2:       #f8fafc;
+  --surface:   rgba(248, 250, 252, 0.95);
+  --card:      #ffffff;
 
-  /* Brand blue — logo circle */
+  /* Brand blue */
   --blue:      #1d6feb;
   --blue-deep: #1251c5;
-  --blue-hi:   #4d94ff;
+  --blue-hi:   #1d6feb;
 
-  /* Accent green — logo right arrow (growth) */
-  --green:     #238636;
-  --bright:    #4ade80;
+  /* Accent green */
+  --green:     #16a34a;
+  --bright:    #16a34a;
   --glow:      #22c55e;
 
-  /* Secondary orange — logo left arrow (energy) */
-  --orange:    #f0883e;
-  --orange-hi: #ffa461;
+  /* Secondary orange */
+  --orange:    #ea580c;
+  --orange-hi: #f97316;
 
   /* Typography */
-  --text:      #e6edf3;
-  --muted:     #7d8590;
-  --dim:       #3d444d;
+  --text:      #0f172a;
+  --muted:     #475569;
+  --dim:       #94a3b8;
 
   /* Status */
-  --danger:    #f85149;
+  --danger:    #dc2626;
 
-  /* Borders — neutral white, never colored */
-  --border:    rgba(240, 246, 252, 0.07);
-  --border-hi: rgba(240, 246, 252, 0.18);
+  /* Borders */
+  --border:    rgba(15, 23, 42, 0.10);
+  --border-hi: rgba(15, 23, 42, 0.22);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -42,18 +42,15 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-weight: 400;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
 
-.font-display { font-family: 'Syne', sans-serif; }
-.font-mono    { font-family: 'DM Mono', monospace; }
-
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-track { background: var(--bg2); }
 ::-webkit-scrollbar-thumb { background: var(--blue-deep); border-radius: 2px; }
 
 /* Fade-up stagger */
@@ -64,14 +61,14 @@ body {
 
 /* Pulse glow — blue */
 @keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(29, 111, 235, 0.5); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(29, 111, 235, 0.4); }
   50%       { box-shadow: 0 0 0 8px rgba(29, 111, 235, 0); }
 }
 
-/* Pulse glow — green for active/success */
+/* Pulse glow — green */
 @keyframes pulseGlowGreen {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5); }
-  50%       { box-shadow: 0 0 0 8px rgba(74, 222, 128, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4); }
+  50%       { box-shadow: 0 0 0 8px rgba(22, 163, 74, 0); }
 }
 
 /* Spin */
@@ -83,14 +80,7 @@ body {
 /* Float */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-8px); }
-}
-
-/* 3D floating window */
-@keyframes float3d {
-  0%, 100% { transform: perspective(900px) rotateX(7deg) rotateY(-10deg) translateY(0px); }
-  33%       { transform: perspective(900px) rotateX(5deg) rotateY(-7deg)  translateY(-10px); }
-  66%       { transform: perspective(900px) rotateX(9deg) rotateY(-13deg) translateY(-5px); }
+  50%       { transform: translateY(-10px); }
 }
 
 /* Scene content fade in */
@@ -107,7 +97,7 @@ body {
 
 /* Button authorize pulse */
 @keyframes authPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(29,111,235,0.6); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(29,111,235,0.5); }
   50%       { box-shadow: 0 0 0 10px rgba(29,111,235,0); }
 }
 
@@ -121,12 +111,6 @@ body {
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0; }
-}
-
-/* Shimmer for logo glow */
-@keyframes shimmer {
-  0%, 100% { opacity: 0.6; }
-  50%       { opacity: 1; }
 }
 
 .anim-fade-up { animation: fadeUp 0.6s ease both; }

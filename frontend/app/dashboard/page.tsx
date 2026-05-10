@@ -89,7 +89,7 @@ function DashboardInner() {
             border: "2px solid var(--border-hi)", borderTopColor: "var(--blue)",
             animation: "spin 0.8s linear infinite",
           }} />
-          <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.75rem", color: "var(--muted)", letterSpacing: "0.1em" }}>
+          <span style={{ fontFamily: "'Roboto Mono', monospace", fontSize: "0.75rem", color: "var(--muted)", letterSpacing: "0.1em" }}>
             LOADING…
           </span>
         </div>
@@ -128,17 +128,17 @@ function DashboardInner() {
         display: "flex", justifyContent: "space-between", alignItems: "center",
         padding: "1.25rem 3rem", position: "relative", zIndex: 10,
         borderBottom: "1px solid var(--border)",
-        backdropFilter: "blur(12px)", background: "rgba(13,17,23,0.82)",
+        backdropFilter: "blur(12px)", background: "rgba(255,255,255,0.92)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
           <LogoMark />
-          <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "1.15rem", letterSpacing: "-0.01em" }}>
+          <span style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 800, fontSize: "1.15rem", letterSpacing: "-0.01em" }}>
             <span style={{ color: "var(--blue-hi)" }}>Auto</span><span style={{ color: "var(--bright)" }}>Share</span>
           </span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <span style={{
-            fontFamily: "'DM Mono', monospace", fontSize: "0.75rem",
+            fontFamily: "'Roboto Mono', monospace", fontSize: "0.75rem",
             color: "var(--muted)",
           }}>
             @{user.github_username}
@@ -147,7 +147,7 @@ function DashboardInner() {
             background: "transparent", border: "1px solid var(--border)",
             color: "var(--muted)", padding: "0.4rem 1rem",
             borderRadius: "6px", cursor: "pointer",
-            fontFamily: "'DM Mono', monospace", fontSize: "0.72rem",
+            fontFamily: "'Roboto Mono', monospace", fontSize: "0.72rem",
             letterSpacing: "0.06em", transition: "all 0.15s",
           }}
             onMouseEnter={e => {
@@ -181,7 +181,7 @@ function DashboardInner() {
               <p style={{ color: "var(--bright)", fontWeight: 600, fontSize: "0.95rem", marginBottom: "0.15rem" }}>
                 Bot activated successfully!
               </p>
-              <p style={{ color: "var(--muted)", fontSize: "0.82rem", fontFamily: "'DM Mono', monospace" }}>
+              <p style={{ color: "var(--muted)", fontSize: "0.82rem", fontFamily: "'Roboto Mono', monospace" }}>
                 Runs daily automatically · Next IPO will be applied for you
               </p>
             </div>
@@ -201,7 +201,7 @@ function DashboardInner() {
           }} />
 
           <div style={{
-            fontFamily: "'DM Mono', monospace", fontSize: "0.68rem",
+            fontFamily: "'Roboto Mono', monospace", fontSize: "0.68rem",
             color: "var(--dim)", letterSpacing: "0.1em", marginBottom: "1.25rem",
           }}>
             BOT STATUS
@@ -210,7 +210,7 @@ function DashboardInner() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "1.5rem", marginBottom: "1.5rem" }}>
             {/* Active status */}
             <div>
-              <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.68rem", color: "var(--dim)", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>STATUS</p>
+              <p style={{ fontFamily: "'Roboto Mono', monospace", fontSize: "0.68rem", color: "var(--dim)", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>STATUS</p>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <span style={{
                   width: "8px", height: "8px", borderRadius: "50%",
@@ -219,7 +219,7 @@ function DashboardInner() {
                   ...(isActive ? { animation: "pulseGlowGreen 2s ease infinite" } : {}),
                 }} />
                 <span style={{
-                  fontFamily: "'Syne', sans-serif", fontWeight: 700,
+                  fontFamily: "'Roboto', sans-serif", fontWeight: 700,
                   fontSize: "1rem", color: isActive ? "var(--bright)" : "var(--muted)",
                 }}>
                   {STATUS_LABEL[user.status] || user.status}
@@ -229,17 +229,17 @@ function DashboardInner() {
 
             {/* Last run */}
             <div>
-              <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.68rem", color: "var(--dim)", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>LAST RUN</p>
-              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.875rem", color: "var(--text)" }}>
+              <p style={{ fontFamily: "'Roboto Mono', monospace", fontSize: "0.68rem", color: "var(--dim)", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>LAST RUN</p>
+              <span style={{ fontFamily: "'Roboto Mono', monospace", fontSize: "0.875rem", color: "var(--text)" }}>
                 {statusData.last_run_at ? fmt(statusData.last_run_at) : "—"}
               </span>
             </div>
 
             {/* Last result */}
             <div>
-              <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.68rem", color: "var(--dim)", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>LAST RESULT</p>
+              <p style={{ fontFamily: "'Roboto Mono', monospace", fontSize: "0.68rem", color: "var(--dim)", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>LAST RESULT</p>
               <span style={{
-                fontFamily: "'DM Mono', monospace", fontSize: "0.875rem",
+                fontFamily: "'Roboto Mono', monospace", fontSize: "0.875rem",
                 color: STATUS_DOT[statusData.last_run_status || ""] || "var(--muted)",
                 fontWeight: 500,
               }}>
@@ -249,8 +249,8 @@ function DashboardInner() {
 
             {/* Next run */}
             <div>
-              <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.68rem", color: "var(--dim)", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>NEXT RUN</p>
-              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.875rem", color: "var(--orange)" }}>
+              <p style={{ fontFamily: "'Roboto Mono', monospace", fontSize: "0.68rem", color: "var(--dim)", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>NEXT RUN</p>
+              <span style={{ fontFamily: "'Roboto Mono', monospace", fontSize: "0.875rem", color: "var(--orange)" }}>
                 Daily · auto
               </span>
             </div>
@@ -270,7 +270,7 @@ function DashboardInner() {
                 border: `1px solid ${!isActive ? "var(--border)" : "transparent"}`,
                 color: !isActive ? "var(--dim)" : "#fff",
                 cursor: triggering || !isActive ? "not-allowed" : "pointer",
-                fontSize: "0.875rem", fontWeight: 600, fontFamily: "'Outfit', sans-serif",
+                fontSize: "0.875rem", fontWeight: 600, fontFamily: "'Roboto', sans-serif",
                 boxShadow: isActive && !triggering ? "0 0 24px rgba(29,111,235,0.3)" : "none",
                 transition: "all 0.2s",
                 opacity: !isActive ? 0.4 : 1,
@@ -300,7 +300,7 @@ function DashboardInner() {
                 padding: "0.625rem 1.25rem", borderRadius: "8px",
                 background: "transparent", border: "1px solid var(--border)",
                 color: "var(--muted)", fontSize: "0.78rem",
-                textDecoration: "none", fontFamily: "'DM Mono', monospace",
+                textDecoration: "none", fontFamily: "'Roboto Mono', monospace",
                 letterSpacing: "0.04em",
                 transition: "all 0.15s",
               } as React.CSSProperties}
@@ -322,7 +322,7 @@ function DashboardInner() {
                 padding: "0.625rem 1.25rem", borderRadius: "8px",
                 background: "transparent", border: "1px solid var(--border)",
                 color: "var(--muted)", fontSize: "0.78rem",
-                textDecoration: "none", fontFamily: "'DM Mono', monospace",
+                textDecoration: "none", fontFamily: "'Roboto Mono', monospace",
                 letterSpacing: "0.04em", transition: "all 0.15s",
               } as React.CSSProperties}
               onMouseEnter={e => {
@@ -345,7 +345,7 @@ function DashboardInner() {
               border: `1px solid ${triggerOk ? "rgba(74,222,128,0.3)" : "rgba(248,81,73,0.25)"}`,
               borderRadius: "6px",
               color: triggerOk ? "var(--bright)" : "var(--danger)",
-              fontSize: "0.8rem", fontFamily: "'DM Mono', monospace",
+              fontSize: "0.8rem", fontFamily: "'Roboto Mono', monospace",
             }}>
               {triggerOk ? "✓" : "✗"} {triggerMsg}
             </div>
@@ -362,13 +362,13 @@ function DashboardInner() {
             marginBottom: "1.25rem",
           }}>
             <div style={{
-              fontFamily: "'DM Mono', monospace", fontSize: "0.68rem",
+              fontFamily: "'Roboto Mono', monospace", fontSize: "0.68rem",
               color: "var(--dim)", letterSpacing: "0.1em",
             }}>
               RUN HISTORY
             </div>
             <div style={{
-              fontFamily: "'DM Mono', monospace", fontSize: "0.68rem",
+              fontFamily: "'Roboto Mono', monospace", fontSize: "0.68rem",
               color: "var(--dim)", letterSpacing: "0.06em",
             }}>
               {statusData.runs.length} RUNS
@@ -387,10 +387,10 @@ function DashboardInner() {
                   <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
                 </svg>
               </div>
-              <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.78rem", color: "var(--muted)", marginBottom: "0.35rem" }}>
+              <p style={{ fontFamily: "'Roboto Mono', monospace", fontSize: "0.78rem", color: "var(--muted)", marginBottom: "0.35rem" }}>
                 No runs yet
               </p>
-              <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.68rem", color: "var(--dim)" }}>
+              <p style={{ fontFamily: "'Roboto Mono', monospace", fontSize: "0.68rem", color: "var(--dim)" }}>
                 Bot runs daily automatically · results appear here
               </p>
             </div>
@@ -400,7 +400,7 @@ function DashboardInner() {
                 <div key={i} style={{
                   display: "flex", justifyContent: "space-between", alignItems: "center",
                   padding: "0.875rem 1rem",
-                  background: "rgba(13,17,23,0.7)",
+                  background: "#f8fafc",
                   border: "1px solid var(--border)",
                   borderRadius: "8px", gap: "1rem", flexWrap: "wrap",
                   transition: "border-color 0.15s",
@@ -413,7 +413,7 @@ function DashboardInner() {
                       {r.ipo_name || "No open IPOs"}
                     </p>
                     {r.error_message && (
-                      <p style={{ color: "var(--danger)", fontSize: "0.78rem", fontFamily: "'DM Mono', monospace" }}>
+                      <p style={{ color: "var(--danger)", fontSize: "0.78rem", fontFamily: "'Roboto Mono', monospace" }}>
                         {r.error_message}
                       </p>
                     )}
@@ -426,7 +426,7 @@ function DashboardInner() {
                         display: "inline-block",
                       }} />
                       <span style={{
-                        fontFamily: "'DM Mono', monospace", fontSize: "0.78rem",
+                        fontFamily: "'Roboto Mono', monospace", fontSize: "0.78rem",
                         color: STATUS_DOT[r.status] || "var(--muted)",
                         fontWeight: 500, letterSpacing: "0.04em",
                       }}>
@@ -434,7 +434,7 @@ function DashboardInner() {
                       </span>
                     </div>
                     <span style={{
-                      fontFamily: "'DM Mono', monospace", fontSize: "0.72rem",
+                      fontFamily: "'Roboto Mono', monospace", fontSize: "0.72rem",
                       color: "var(--dim)",
                     }}>
                       {fmt(r.run_at)}
@@ -453,7 +453,7 @@ function DashboardInner() {
           background: "rgba(248,81,73,0.03)",
         }}>
           <div style={{
-            fontFamily: "'DM Mono', monospace", fontSize: "0.68rem",
+            fontFamily: "'Roboto Mono', monospace", fontSize: "0.68rem",
             color: "rgba(248,81,73,0.6)", letterSpacing: "0.1em", marginBottom: "0.75rem",
           }}>
             DANGER ZONE
@@ -467,7 +467,7 @@ function DashboardInner() {
               padding: "0.55rem 1.25rem", borderRadius: "7px",
               background: "transparent", border: "1px solid rgba(248,81,73,0.4)",
               color: "var(--danger)", cursor: "pointer", fontSize: "0.875rem",
-              fontFamily: "'DM Mono', monospace", letterSpacing: "0.04em",
+              fontFamily: "'Roboto Mono', monospace", letterSpacing: "0.04em",
               transition: "all 0.15s",
             }}
               onMouseEnter={e => (e.currentTarget as HTMLButtonElement).style.background = "rgba(248,81,73,0.1)"}
@@ -477,14 +477,14 @@ function DashboardInner() {
             </button>
           ) : (
             <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", flexWrap: "wrap" }}>
-              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.78rem", color: "var(--danger)" }}>
+              <span style={{ fontFamily: "'Roboto Mono', monospace", fontSize: "0.78rem", color: "var(--danger)" }}>
                 Are you sure? This cannot be undone.
               </span>
               <button onClick={handleDelete} style={{
                 padding: "0.55rem 1.25rem", borderRadius: "7px",
                 background: "rgba(248,81,73,0.15)", border: "1px solid var(--danger)",
                 color: "var(--danger)", cursor: "pointer", fontSize: "0.875rem",
-                fontFamily: "'DM Mono', monospace", fontWeight: 600,
+                fontFamily: "'Roboto Mono', monospace", fontWeight: 600,
               }}>
                 Yes, delete everything
               </button>
@@ -492,7 +492,7 @@ function DashboardInner() {
                 padding: "0.55rem 1.25rem", borderRadius: "7px",
                 background: "transparent", border: "1px solid var(--border)",
                 color: "var(--muted)", cursor: "pointer", fontSize: "0.875rem",
-                fontFamily: "'DM Mono', monospace",
+                fontFamily: "'Roboto Mono', monospace",
               }}>
                 Cancel
               </button>

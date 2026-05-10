@@ -54,7 +54,7 @@ function CallbackInner() {
         <Spinner />
         <p style={{
           color: "var(--muted)", marginTop: "1.5rem",
-          fontFamily: "'DM Mono', monospace", fontSize: "0.78rem",
+          fontFamily: "'Roboto Mono', monospace", fontSize: "0.78rem",
           letterSpacing: "0.1em",
         }}>
           SETTING UP YOUR ACCOUNT…
