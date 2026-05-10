@@ -8,17 +8,9 @@ type Account = { dp: string; meroshare_user: string; meroshare_pass: string; crn
 
 const BLANK: Account = { dp: "", meroshare_user: "", meroshare_pass: "", crn: "", pin: "" };
 
-const TIME_OPTIONS = Array.from({ length: 18 }, (_, i) => {
-  const hour = i + 5; // 5 AM to 10 PM NST
-  const suffix = hour < 12 ? "AM" : "PM";
-  const h = hour % 12 || 12;
-  return { hour, label: `${h}:00 ${suffix} NST${hour === 6 ? "  (default)" : ""}` };
-});
-
 export default function SetupPage() {
   const router = useRouter();
   const [accounts, setAccounts] = useState<Account[]>([{ ...BLANK }]);
-  const [runHour, setRunHour] = useState(6);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -67,7 +59,7 @@ export default function SetupPage() {
     setLoading(true);
     setError("");
     try {
-      await saveCredentials({ accounts, run_hour: runHour });
+      await saveCredentials({ accounts });
       router.replace(isEditing ? "/dashboard" : "/dashboard?setup=done");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to save");
@@ -331,49 +323,6 @@ export default function SetupPage() {
           >
             + ADD ANOTHER ACCOUNT
           </button>
-
-          {/* Schedule picker */}
-          <div style={{
-            background: "var(--card)", border: "1px solid var(--border)",
-            borderRadius: "12px", padding: "1.25rem 1.5rem",
-            marginBottom: "1.25rem",
-          }}>
-            <label style={{
-              display: "block", fontFamily: "'DM Mono', monospace",
-              fontSize: "0.7rem", color: "var(--muted)", letterSpacing: "0.08em",
-              marginBottom: "0.75rem",
-            }}>
-              DAILY RUN TIME
-            </label>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
-              <select
-                value={runHour}
-                onChange={e => setRunHour(Number(e.target.value))}
-                style={{
-                  padding: "0.6rem 1rem", borderRadius: "7px",
-                  background: "rgba(13,17,23,0.9)",
-                  border: "1px solid rgba(240,246,252,0.12)",
-                  color: "var(--text)", fontSize: "0.9rem",
-                  fontFamily: "'Outfit', sans-serif",
-                  outline: "none", cursor: "pointer",
-                  appearance: "none" as const,
-                  paddingRight: "2rem",
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237d8590' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: "right 0.6rem center",
-                }}
-                onFocus={e => (e.target as HTMLSelectElement).style.borderColor = "rgba(29,111,235,0.55)"}
-                onBlur={e => (e.target as HTMLSelectElement).style.borderColor = "rgba(240,246,252,0.12)"}
-              >
-                {TIME_OPTIONS.map(({ hour, label }) => (
-                  <option key={hour} value={hour}>{label}</option>
-                ))}
-              </select>
-              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.72rem", color: "var(--dim)" }}>
-                Bot applies for open IPOs at this time every day
-              </span>
-            </div>
-          </div>
 
           {/* Error */}
           {error && (

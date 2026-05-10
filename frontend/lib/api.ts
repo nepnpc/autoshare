@@ -56,7 +56,6 @@ export async function getAccounts(): Promise<{ accounts: Array<{ dp: string; mer
 
 export async function saveCredentials(data: {
   accounts: Array<{ dp: string; meroshare_user: string; meroshare_pass: string; crn: string; pin: string }>;
-  run_hour: number;
 }) {
   return req("/setup/credentials", { method: "POST", body: JSON.stringify(data) });
 }

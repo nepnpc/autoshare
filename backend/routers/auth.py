@@ -1,3 +1,4 @@
+import random
 import secrets
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
@@ -89,27 +90,18 @@ async def me(user: User = Depends(get_current_user)):
         "github_repo_name": user.github_repo_name,
         "meroshare_dp": user.meroshare_dp,
         "status": user.status,
-        "run_hour_nst": user.run_hour_nst,
         "last_run_at": user.last_run_at,
         "last_run_status": user.last_run_status,
     }
 
 
-def _nst_hour_to_cron(nst_hour: int) -> str:
-    """Convert NST hour (0-23) to UTC cron. NST = UTC+5:45, so UTC = NST - 5h45m."""
+def _build_workflow(docker_image: str) -> str:
+    nst_hour = random.randint(5, 21)
     utc_minutes = (nst_hour * 60 - 345) % 1440
-    return f"{utc_minutes % 60} {utc_minutes // 60} * * *"
-
-
-def _fmt_nst(nst_hour: int) -> str:
+    cron = f"{utc_minutes % 60} {utc_minutes // 60} * * *"
     suffix = "AM" if nst_hour < 12 else "PM"
     h = nst_hour % 12 or 12
-    return f"{h}:00 {suffix} Nepal time (UTC+5:45)"
-
-
-def _build_workflow(docker_image: str, nst_hour: int = 6) -> str:
-    cron = _nst_hour_to_cron(nst_hour)
-    label = _fmt_nst(nst_hour)
+    label = f"{h}:00 {suffix} Nepal time (UTC+5:45)"
     # Pre-generate per-account env var lines (supports up to 8 accounts)
     acct_env = "\n".join(
         f"          MEROSHARE_ACCOUNT_{i}: ${{{{ secrets.MEROSHARE_ACCOUNT_{i} }}}}"

@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { getMe, getStatus, triggerBot, deleteAccount, clearToken, isLoggedIn } from "@/lib/api";
 
 type Run = { ipo_name: string | null; run_at: string; status: string; error_message: string | null };
-type StatusData = { status: string; run_hour_nst: number; last_run_at: string | null; last_run_status: string | null; runs: Run[] };
+type StatusData = { status: string; last_run_at: string | null; last_run_status: string | null; runs: Run[] };
 type UserData = { github_username: string; github_repo_name: string; meroshare_dp: string; status: string };
 
 const STATUS_DOT: Record<string, string> = {
@@ -25,12 +25,6 @@ const STATUS_LABEL: Record<string, string> = {
   active: "Active",
   pending: "Setup pending",
 };
-
-function fmtRunTime(nstHour: number) {
-  const suffix = nstHour < 12 ? "AM" : "PM";
-  const h = nstHour % 12 || 12;
-  return `${h}:00 ${suffix}`;
-}
 
 function fmt(iso: string) {
   const d = new Date(iso);
@@ -188,7 +182,7 @@ function DashboardInner() {
                 Bot activated successfully!
               </p>
               <p style={{ color: "var(--muted)", fontSize: "0.82rem", fontFamily: "'DM Mono', monospace" }}>
-                Runs daily at 6:15 AM NST · Next IPO will be applied automatically
+                Runs daily automatically · Next IPO will be applied for you
               </p>
             </div>
           </div>
@@ -257,7 +251,7 @@ function DashboardInner() {
             <div>
               <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.68rem", color: "var(--dim)", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>NEXT RUN</p>
               <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.875rem", color: "var(--orange)" }}>
-                {fmtRunTime(statusData.run_hour_nst ?? 6)}
+                Daily · auto
               </span>
             </div>
           </div>
@@ -422,7 +416,7 @@ function DashboardInner() {
                 ))}
               </div>
               <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.68rem", color: "var(--dim)", textAlign: "center", marginTop: "1rem" }}>
-                Bot hasn&apos;t run yet — first run at {fmtRunTime(statusData.run_hour_nst ?? 6)} NST
+                Bot hasn&apos;t run yet — runs daily at a random time NST
               </p>
             </div>
           ) : (
