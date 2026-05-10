@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { getMe, getStatus, triggerBot, deleteAccount, clearToken, isLoggedIn } from "@/lib/api";
 
 type Run = { ipo_name: string | null; run_at: string; status: string; error_message: string | null };
-type StatusData = { status: string; last_run_at: string | null; last_run_status: string | null; runs: Run[] };
+type StatusData = { status: string; run_hour_nst: number; last_run_at: string | null; last_run_status: string | null; runs: Run[] };
 type UserData = { github_username: string; github_repo_name: string; meroshare_dp: string; status: string };
 
 const STATUS_DOT: Record<string, string> = {
@@ -25,6 +25,12 @@ const STATUS_LABEL: Record<string, string> = {
   active: "Active",
   pending: "Setup pending",
 };
+
+function fmtRunTime(nstHour: number) {
+  const suffix = nstHour < 12 ? "AM" : "PM";
+  const h = nstHour % 12 || 12;
+  return `${h}:00 ${suffix}`;
+}
 
 function fmt(iso: string) {
   const d = new Date(iso);
@@ -251,7 +257,7 @@ function DashboardInner() {
             <div>
               <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.68rem", color: "var(--dim)", letterSpacing: "0.08em", marginBottom: "0.5rem" }}>NEXT RUN</p>
               <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.875rem", color: "var(--orange)" }}>
-                6:15 AM NST
+                {fmtRunTime(statusData.run_hour_nst ?? 6)}
               </span>
             </div>
           </div>
@@ -376,15 +382,47 @@ function DashboardInner() {
           </div>
 
           {statusData.runs.length === 0 ? (
-            <div style={{
-              padding: "2rem", textAlign: "center",
-              border: "1px dashed var(--border)", borderRadius: "10px",
-            }}>
-              <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.78rem", color: "var(--dim)", letterSpacing: "0.06em" }}>
-                NO RUNS YET
-              </p>
-              <p style={{ color: "var(--dim)", fontSize: "0.8rem", marginTop: "0.4rem" }}>
-                Bot runs daily at 6:15 AM NST
+            <div>
+              <div style={{
+                display: "flex", alignItems: "center", gap: "0.75rem",
+                marginBottom: "0.875rem",
+              }}>
+                <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
+                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.65rem", color: "var(--dim)", letterSpacing: "0.1em" }}>EXAMPLE · YOUR LOG WILL LOOK LIKE THIS</span>
+                <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", opacity: 0.4 }}>
+                {[
+                  { ipo_name: "NRIC Hydropower IPO", status: "applied", run_at: "2026-05-10T00:30:00Z", error_message: null },
+                  { ipo_name: "Kumari Life Insurance IPO", status: "applied", run_at: "2026-05-09T00:30:00Z", error_message: null },
+                  { ipo_name: null, status: "no_ipos", run_at: "2026-05-08T00:30:00Z", error_message: null },
+                ].map((r, i) => (
+                  <div key={i} style={{
+                    display: "flex", justifyContent: "space-between", alignItems: "center",
+                    padding: "0.875rem 1rem",
+                    background: "rgba(13,17,23,0.7)",
+                    border: "1px solid var(--border)",
+                    borderRadius: "8px", gap: "1rem", flexWrap: "wrap",
+                  }}>
+                    <p style={{ color: "var(--text)", fontSize: "0.9rem", fontWeight: 500 }}>
+                      {r.ipo_name || "No open IPOs"}
+                    </p>
+                    <div style={{ display: "flex", gap: "1.25rem", alignItems: "center", flexShrink: 0 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                        <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: STATUS_DOT[r.status] || "var(--muted)", display: "inline-block" }} />
+                        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.78rem", color: STATUS_DOT[r.status] || "var(--muted)", fontWeight: 500, letterSpacing: "0.04em" }}>
+                          {STATUS_LABEL[r.status] || r.status}
+                        </span>
+                      </div>
+                      <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.72rem", color: "var(--dim)" }}>
+                        {fmt(r.run_at)}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.68rem", color: "var(--dim)", textAlign: "center", marginTop: "1rem" }}>
+                Bot hasn&apos;t run yet — first run at {fmtRunTime(statusData.run_hour_nst ?? 6)} NST
               </p>
             </div>
           ) : (

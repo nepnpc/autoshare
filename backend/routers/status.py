@@ -24,6 +24,7 @@ async def get_status(
     runs = result.scalars().all()
     return {
         "status": user.status,
+        "run_hour_nst": user.run_hour_nst,
         "last_run_at": user.last_run_at,
         "last_run_status": user.last_run_status,
         "runs": [

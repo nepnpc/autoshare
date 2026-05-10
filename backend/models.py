@@ -20,6 +20,7 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     last_run_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     last_run_status: Mapped[str | None] = mapped_column(String)
+    run_hour_nst: Mapped[int] = mapped_column(Integer, default=6)
 
 
 class AccountMeta(Base):

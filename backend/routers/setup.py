@@ -23,6 +23,7 @@ class Account(BaseModel):
 
 class CredentialsRequest(BaseModel):
     accounts: list[Account]
+    run_hour: int = 6  # NST hour (0-23), default 6 AM
 
 
 @router.get("/accounts")
@@ -85,12 +86,26 @@ async def save_credentials(
 
     user.meroshare_dp = body.accounts[0].dp
     user.status = "active"
+    user.run_hour_nst = body.run_hour
     await db.commit()
+
+    # Re-push workflow with updated cron schedule
+    from routers.auth import _build_workflow, _fmt_nst
+    try:
+        await gh.push_file(
+            token, owner, repo,
+            ".github/workflows/bot.yml",
+            _build_workflow(settings.docker_image, nst_hour=body.run_hour),
+            f"AutoShare: update schedule to {_fmt_nst(body.run_hour)}",
+        )
+    except Exception:
+        pass  # Non-fatal: secrets saved, workflow update can retry
 
     return {
         "status": "active",
         "accounts": len(body.accounts),
-        "message": f"{len(body.accounts)} account(s) activated. Bot runs daily at 6:15 AM Nepal time.",
+        "run_hour_nst": body.run_hour,
+        "message": f"{len(body.accounts)} account(s) activated. Bot runs daily at {_fmt_nst(body.run_hour)}.",
     }
 
 
