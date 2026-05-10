@@ -110,6 +110,11 @@ def _fmt_nst(nst_hour: int) -> str:
 def _build_workflow(docker_image: str, nst_hour: int = 6) -> str:
     cron = _nst_hour_to_cron(nst_hour)
     label = _fmt_nst(nst_hour)
+    # Pre-generate per-account env var lines (supports up to 8 accounts)
+    acct_env = "\n".join(
+        f"          MEROSHARE_ACCOUNT_{i}: ${{{{ secrets.MEROSHARE_ACCOUNT_{i} }}}}"
+        for i in range(8)
+    )
     return f"""\
 # AutoShare IPO Bot — auto-generated, do not edit manually
 name: AutoShare IPO Bot
@@ -130,11 +135,12 @@ jobs:
 
       - name: Apply for open IPOs
         env:
-          MEROSHARE_ACCOUNTS: ${{{{ secrets.MEROSHARE_ACCOUNTS }}}}
+{acct_env}
           AUTOSHARE_WEBHOOK: ${{{{ secrets.AUTOSHARE_WEBHOOK }}}}
         run: |
+          python3 -c "import os,json;a=[json.loads(v) for i in range(8) if (v:=os.environ.get('MEROSHARE_ACCOUNT_'+str(i),''))];print(json.dumps(a))" > /tmp/accounts.json
           docker run --rm \\
-            -e MEROSHARE_ACCOUNTS \\
+            -e MEROSHARE_ACCOUNTS="$(cat /tmp/accounts.json)" \\
             -e AUTOSHARE_WEBHOOK \\
             {docker_image}
 """

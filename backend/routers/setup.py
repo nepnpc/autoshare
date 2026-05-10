@@ -16,7 +16,7 @@ router = APIRouter(prefix="/setup", tags=["setup"])
 class Account(BaseModel):
     dp: str
     meroshare_user: str
-    meroshare_pass: str
+    meroshare_pass: str = ""  # blank = keep existing secret
     crn: str
     pin: str
 
@@ -57,25 +57,22 @@ async def save_credentials(
     owner = user.github_username
     repo = user.github_repo_name
 
-    accounts_payload = json.dumps([
-        {
-            "dp":       a.dp,
-            "username": a.meroshare_user,
-            "password": a.meroshare_pass,
-            "crn":      a.crn,
-            "pin":      a.pin,
-        }
-        for a in body.accounts
-    ])
-
-    secrets_map = {
-        "MEROSHARE_ACCOUNTS":  accounts_payload,
-        "AUTOSHARE_WEBHOOK":   f"{settings.backend_url}/webhook/run?token={user.webhook_token}",
-    }
-
     try:
-        for name, value in secrets_map.items():
-            await gh.set_secret(token, owner, repo, name, value)
+        for i, a in enumerate(body.accounts):
+            if a.meroshare_pass:
+                account_data = json.dumps({
+                    "dp":       a.dp,
+                    "username": a.meroshare_user,
+                    "password": a.meroshare_pass,
+                    "crn":      a.crn,
+                    "pin":      a.pin,
+                })
+                await gh.set_secret(token, owner, repo, f"MEROSHARE_ACCOUNT_{i}", account_data)
+        await gh.set_secret(
+            token, owner, repo,
+            "AUTOSHARE_WEBHOOK",
+            f"{settings.backend_url}/webhook/run?token={user.webhook_token}",
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to set secrets: {e}")
 

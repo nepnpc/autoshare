@@ -55,8 +55,12 @@ export default function SetupPage() {
     e.preventDefault();
     for (let i = 0; i < accounts.length; i++) {
       const a = accounts[i];
-      if (!a.dp || !a.meroshare_user || !a.meroshare_pass || !a.crn || !a.pin) {
-        setError(`Account ${i + 1}: all fields are required`);
+      if (!a.dp || !a.meroshare_user || !a.crn || !a.pin) {
+        setError(`Account ${i + 1}: DP, username, CRN and PIN are required`);
+        return;
+      }
+      if (!isEditing && !a.meroshare_pass) {
+        setError(`Account ${i + 1}: password is required`);
         return;
       }
     }
@@ -266,7 +270,7 @@ export default function SetupPage() {
                     type="password"
                     value={acct.meroshare_pass}
                     onChange={e => setField(idx, "meroshare_pass", e.target.value)}
-                    placeholder="••••••••"
+                    placeholder={isEditing ? "Leave blank to keep current" : "••••••••"}
                     style={inputStyle()}
                     onFocus={e => (e.target as HTMLInputElement).style.borderColor = "rgba(29,111,235,0.55)"}
                     onBlur={e => (e.target as HTMLInputElement).style.borderColor = "rgba(240,246,252,0.09)"}
