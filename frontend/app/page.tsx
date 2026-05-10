@@ -382,10 +382,10 @@ function SceneCredentials() {
       </p>
       <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem", marginBottom: "1.5rem" }}>
         {[
-          { label: "DP Code",  value: "11000",    delay: "0s",   mono: true  },
-          { label: "Username", value: "02532993", delay: "0.3s", mono: false },
+          { label: "DP Code",  value: "13007",    delay: "0s",   mono: true  },
+          { label: "Username", value: "10001234", delay: "0.3s", mono: false },
           { label: "Password", value: "••••••••", delay: "0.6s", mono: false },
-          { label: "CRN",      value: "S01795…",  delay: "0.9s", mono: true  },
+          { label: "CRN",      value: "SXXXXX…",  delay: "0.9s", mono: true  },
         ].map(({ label, value, delay, mono }) => (
           <div key={label} style={{ animation: "sceneFadeIn 0.4s ease both", animationDelay: delay }}>
             <p style={{ fontFamily: "'Roboto', sans-serif", fontSize: "0.72rem", color: "#64748b", fontWeight: 500, marginBottom: "0.3rem" }}>{label}</p>
