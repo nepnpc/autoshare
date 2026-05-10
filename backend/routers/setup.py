@@ -9,7 +9,7 @@ from models import User, AccountMeta
 from services import github as gh
 from services.crypto import decrypt
 from auth_utils import get_current_user
-from main import limiter
+from limiter import limiter
 
 router = APIRouter(prefix="/setup", tags=["setup"])
 

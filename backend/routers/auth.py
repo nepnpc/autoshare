@@ -11,7 +11,7 @@ from models import User
 from services import github as gh
 from services.crypto import encrypt
 from auth_utils import create_token, get_current_user
-from main import limiter
+from limiter import limiter
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
