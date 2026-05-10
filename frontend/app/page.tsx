@@ -192,12 +192,13 @@ export default function LandingPage() {
           <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
         </div>
 
-        {/* 3D Window */}
+        {/* Window */}
         <div style={{
           width: "100%", maxWidth: "560px",
-          animation: "float3d 8s ease-in-out infinite",
+          animation: "float 6s ease-in-out infinite",
           marginBottom: "2.5rem",
-          filter: "drop-shadow(0 40px 80px rgba(0,0,0,0.6)) drop-shadow(0 0 60px rgba(29,111,235,0.12))",
+          boxShadow: "0 40px 80px rgba(0,0,0,0.5), 0 0 60px rgba(29,111,235,0.10)",
+          borderRadius: "14px",
         }}>
           {/* Window chrome */}
           <div style={{
