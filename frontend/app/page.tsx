@@ -4,39 +4,27 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getLoginUrl, isLoggedIn } from "@/lib/api";
 
-const STEPS = [
-  {
-    n: "01",
-    icon: <ConnectIcon />,
-    title: "Connect GitHub",
-    desc: "One click OAuth. GitHub becomes your secure vault — not us.",
-    accent: "var(--blue-hi)",
-  },
-  {
-    n: "02",
-    icon: <AccountIcon />,
-    title: "Add your accounts",
-    desc: "Enter all Meroshare accounts. DP, username, password, CRN, PIN.",
-    accent: "var(--bright)",
-  },
-  {
-    n: "03",
-    icon: <BotIcon />,
-    title: "Wake up to allotments",
-    desc: "Bot runs 6:15 AM daily. Only Ordinary Shares. Never mutual funds.",
-    accent: "var(--orange)",
-  },
+const STEP_META = [
+  { n: "01", title: "Connect GitHub",        color: "var(--blue-hi)",  bg: "rgba(29,111,235,0.08)"  },
+  { n: "02", title: "Add Meroshare accounts", color: "var(--bright)",   bg: "rgba(74,222,128,0.06)"  },
+  { n: "03", title: "Wake up to allotments",  color: "var(--orange)",   bg: "rgba(240,136,62,0.07)"  },
 ];
 
 export default function LandingPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
     setMounted(true);
     if (isLoggedIn()) router.replace("/dashboard");
   }, [router]);
+
+  useEffect(() => {
+    const t = setInterval(() => setActiveStep(p => (p + 1) % 3), 4500);
+    return () => clearInterval(t);
+  }, []);
 
   async function handleConnect() {
     setLoading(true);
@@ -54,21 +42,21 @@ export default function LandingPage() {
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", overflow: "hidden" }}>
 
-      {/* Subtle dot grid */}
+      {/* Dot grid */}
       <div style={{
         position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none",
         backgroundImage: "radial-gradient(rgba(240,246,252,0.04) 1px, transparent 1px)",
         backgroundSize: "32px 32px",
       }} />
 
-      {/* Blue glow — top center */}
+      {/* Blue glow */}
       <div style={{
         position: "fixed", top: "-20%", left: "50%", transform: "translateX(-50%)",
         width: "800px", height: "600px", borderRadius: "50%",
         background: "radial-gradient(ellipse, rgba(29,111,235,0.12) 0%, transparent 65%)",
         pointerEvents: "none", zIndex: 0,
       }} />
-      {/* Green glow — top right */}
+      {/* Green glow */}
       <div style={{
         position: "fixed", top: "-10%", right: "-8%",
         width: "450px", height: "450px", borderRadius: "50%",
@@ -98,11 +86,10 @@ export default function LandingPage() {
           fontFamily: "'Outfit', sans-serif", fontSize: "0.875rem", fontWeight: 500,
           padding: "0.5rem 1.25rem", borderRadius: "6px",
           background: "transparent", border: "1px solid var(--border-hi)",
-          color: "var(--muted)", cursor: "pointer",
-          transition: "all 0.2s",
+          color: "var(--muted)", cursor: "pointer", transition: "all 0.2s",
         }}
-          onMouseEnter={e => { e.currentTarget.style.background = "rgba(240,246,252,0.06)"; e.currentTarget.style.color = "var(--text)"; e.currentTarget.style.borderColor = "var(--border-hi)"; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--muted)"; e.currentTarget.style.borderColor = "var(--border-hi)"; }}
+          onMouseEnter={e => { e.currentTarget.style.background = "rgba(240,246,252,0.06)"; e.currentTarget.style.color = "var(--text)"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--muted)"; }}
         >
           {loading ? "…" : "Sign in →"}
         </button>
@@ -111,11 +98,10 @@ export default function LandingPage() {
       {/* Hero */}
       <section style={{
         position: "relative", zIndex: 5,
-        padding: "6rem 2rem 4rem",
+        padding: "5rem 2rem 2rem",
         textAlign: "center",
         display: "flex", flexDirection: "column", alignItems: "center",
       }}>
-
         <div className="anim-fade-up" style={{
           display: "inline-flex", alignItems: "center", gap: "0.5rem",
           fontFamily: "'DM Mono', monospace", fontSize: "0.72rem",
@@ -128,7 +114,7 @@ export default function LandingPage() {
             background: "var(--bright)", display: "inline-block",
             animation: "pulseGlowGreen 2s ease infinite",
           }} />
-          BOT RUNNING DAILY · 6:15 AM NST
+          BOT RUNNING DAILY · AUTOMATED
         </div>
 
         <h1 className="anim-fade-up anim-delay-1" style={{
@@ -158,7 +144,7 @@ export default function LandingPage() {
           Your password never leaves GitHub&apos;s encrypted secrets vault.
         </p>
 
-        <div className="anim-fade-up anim-delay-3" style={{ display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "center", marginBottom: "4rem" }}>
+        <div className="anim-fade-up anim-delay-3" style={{ display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "center", marginBottom: "5rem" }}>
           <button onClick={handleConnect} disabled={loading} style={{
             display: "flex", alignItems: "center", gap: "0.625rem",
             padding: "0.9rem 2.25rem", borderRadius: "10px",
@@ -168,133 +154,117 @@ export default function LandingPage() {
             boxShadow: "0 4px 24px rgba(29,111,235,0.30), 0 0 48px rgba(34,197,94,0.10)",
             transition: "all 0.25s", opacity: loading ? 0.7 : 1,
           }}
-            onMouseEnter={e => {
-              e.currentTarget.style.boxShadow = "0 6px 36px rgba(29,111,235,0.45), 0 0 60px rgba(34,197,94,0.18)";
-              e.currentTarget.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.boxShadow = "0 4px 24px rgba(29,111,235,0.30), 0 0 48px rgba(34,197,94,0.10)";
-              e.currentTarget.style.transform = "translateY(0)";
-            }}
+            onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 6px 36px rgba(29,111,235,0.45), 0 0 60px rgba(34,197,94,0.18)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 4px 24px rgba(29,111,235,0.30), 0 0 48px rgba(34,197,94,0.10)"; e.currentTarget.style.transform = "translateY(0)"; }}
           >
             <GitHubIcon />
             {loading ? "Connecting…" : "Connect with GitHub — Free"}
           </button>
         </div>
 
-        {/* Bot run preview card */}
-        <div className="anim-fade-up anim-delay-4" style={{
-          background: "var(--card)",
-          border: "1px solid var(--border)",
-          borderRadius: "14px",
-          overflow: "hidden",
-          width: "100%", maxWidth: "420px",
-          boxShadow: "0 24px 64px rgba(0,0,0,0.4)",
-        }}>
-          {/* Card header */}
-          <div style={{
-            padding: "0.875rem 1.25rem",
-            borderBottom: "1px solid var(--border)",
-            display: "flex", justifyContent: "space-between", alignItems: "center",
-            background: "rgba(240,246,252,0.02)",
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "var(--bright)", display: "inline-block", animation: "pulseGlowGreen 2s ease infinite" }} />
-              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.68rem", color: "var(--muted)", letterSpacing: "0.08em" }}>BOT RUN LOG</span>
-            </div>
-            <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.65rem", color: "var(--dim)" }}>TODAY · 6:15 AM NST</span>
-          </div>
-          {/* Run rows */}
-          {[
-            { status: "applied", name: "NRIC Hydropower IPO", color: "var(--bright)" },
-            { status: "applied", name: "Kumari Life Insurance IPO", color: "var(--bright)" },
-            { status: "no_ipos",  name: "No new IPOs open",  color: "var(--dim)" },
-          ].map((r, i) => (
-            <div key={i} style={{
-              padding: "0.875rem 1.25rem",
-              borderBottom: i < 2 ? "1px solid var(--border)" : "none",
-              display: "flex", justifyContent: "space-between", alignItems: "center",
-            }}>
-              <span style={{ fontSize: "0.88rem", color: r.status === "no_ipos" ? "var(--dim)" : "var(--text)", fontFamily: "'Outfit', sans-serif" }}>
-                {r.name}
-              </span>
-              <span style={{
-                fontFamily: "'DM Mono', monospace", fontSize: "0.72rem",
-                color: r.color, fontWeight: 500,
-                background: r.status === "applied" ? "rgba(74,222,128,0.08)" : "transparent",
-                padding: r.status === "applied" ? "0.15rem 0.6rem" : "0",
-                borderRadius: "999px",
-                border: r.status === "applied" ? "1px solid rgba(74,222,128,0.2)" : "none",
-              }}>
-                {r.status === "applied" ? "✓ Applied" : "—"}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {/* Stats row */}
+        {/* Stats */}
         <div className="anim-fade-up anim-delay-5" style={{
-          display: "flex", gap: "4rem", marginTop: "3.5rem",
+          display: "flex", gap: "4rem", marginBottom: "5rem",
           flexWrap: "wrap", justifyContent: "center",
         }}>
           {[
-            { n: "8+", label: "Accounts per user", color: "var(--blue-hi)" },
-            { n: "100%", label: "Free forever", color: "var(--bright)" },
-            { n: "6:15", label: "AM NST daily run", color: "var(--orange)" },
+            { n: "8+",   label: "Accounts per user",  color: "var(--blue-hi)" },
+            { n: "100%", label: "Free forever",        color: "var(--bright)"  },
+            { n: "0",    label: "IPOs you will miss",  color: "var(--orange)"  },
           ].map(({ n, label, color }) => (
             <div key={label} style={{ textAlign: "center" }}>
-              <div style={{
-                fontFamily: "'Syne', sans-serif", fontWeight: 800,
-                fontSize: "2.25rem", color,
-              }}>{n}</div>
+              <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "2.25rem", color }}>{n}</div>
               <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.7rem", color: "var(--dim)", letterSpacing: "0.06em", marginTop: "0.25rem" }}>{label}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Steps */}
+      {/* HOW IT WORKS — 3D animated demo */}
       <section style={{
         position: "relative", zIndex: 5,
-        padding: "3rem 2rem 6rem", maxWidth: "1060px", margin: "0 auto",
+        padding: "0 2rem 7rem", maxWidth: "900px", margin: "0 auto",
+        display: "flex", flexDirection: "column", alignItems: "center",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "3rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "3.5rem", width: "100%" }}>
           <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
           <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.72rem", color: "var(--dim)", letterSpacing: "0.12em" }}>HOW IT WORKS</span>
           <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.5rem" }}>
-          {STEPS.map(({ n, icon, title, desc, accent }, i) => (
-            <div key={n} className={`anim-fade-up anim-delay-${i + 2}`} style={{
-              background: "var(--card)",
-              border: "1px solid var(--border)",
-              borderRadius: "14px", padding: "2rem",
-              position: "relative", overflow: "hidden",
-              transition: "border-color 0.2s, box-shadow 0.2s, transform 0.2s",
-              cursor: "default",
-            }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLDivElement).style.borderColor = `${accent}50`;
-                (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 40px ${accent}12`;
-                (e.currentTarget as HTMLDivElement).style.transform = "translateY(-2px)";
-              }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLDivElement).style.borderColor = "var(--border)";
-                (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
-                (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
-              }}
-            >
-              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.68rem", color: accent, letterSpacing: "0.12em", marginBottom: "1.25rem", opacity: 0.8 }}>{n}</div>
-              <div style={{ marginBottom: "1rem", color: accent }}>{icon}</div>
-              <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: "1.2rem", color: "var(--text)", marginBottom: "0.75rem" }}>{title}</h3>
-              <p style={{ color: "var(--muted)", fontSize: "0.9rem", lineHeight: 1.7 }}>{desc}</p>
-              <div style={{
-                position: "absolute", bottom: 0, right: 0,
-                width: "100px", height: "100px",
-                background: `radial-gradient(circle at 100% 100%, ${accent}0d 0%, transparent 70%)`,
-              }} />
+        {/* 3D Window */}
+        <div style={{
+          width: "100%", maxWidth: "560px",
+          animation: "float3d 8s ease-in-out infinite",
+          marginBottom: "2.5rem",
+          filter: "drop-shadow(0 40px 80px rgba(0,0,0,0.6)) drop-shadow(0 0 60px rgba(29,111,235,0.12))",
+        }}>
+          {/* Window chrome */}
+          <div style={{
+            background: "#1a1f2e",
+            borderRadius: "14px 14px 0 0",
+            border: "1px solid var(--border-hi)",
+            borderBottom: "none",
+            padding: "0.75rem 1rem",
+            display: "flex", alignItems: "center", gap: "0.75rem",
+          }}>
+            {/* Traffic lights */}
+            <div style={{ display: "flex", gap: "6px" }}>
+              {["#ff5f57","#febc2e","#28c840"].map(c => (
+                <div key={c} style={{ width: 12, height: 12, borderRadius: "50%", background: c }} />
+              ))}
             </div>
+            {/* URL bar */}
+            <div style={{
+              flex: 1, background: "rgba(240,246,252,0.05)",
+              border: "1px solid var(--border)",
+              borderRadius: "6px", padding: "0.3rem 0.75rem",
+              fontFamily: "'DM Mono', monospace", fontSize: "0.72rem", color: "var(--dim)",
+              textAlign: "center",
+            }}>
+              {activeStep === 0 ? "github.com/login/oauth/authorize" :
+               activeStep === 1 ? "autoshare.app/setup" :
+               "github.com/actions · AutoShare IPO Bot"}
+            </div>
+          </div>
+
+          {/* Window content */}
+          <div style={{
+            background: "#0d1117",
+            border: "1px solid var(--border-hi)",
+            borderTop: "1px solid rgba(240,246,252,0.04)",
+            borderRadius: "0 0 14px 14px",
+            minHeight: "340px",
+            overflow: "hidden",
+          }}>
+            {activeStep === 0 && <SceneGitHub key="gh" />}
+            {activeStep === 1 && <SceneCredentials key="creds" />}
+            {activeStep === 2 && <SceneBot key="bot" />}
+          </div>
+        </div>
+
+        {/* Step indicators */}
+        <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+          {STEP_META.map((s, i) => (
+            <button key={i} onClick={() => setActiveStep(i)} style={{
+              display: "flex", alignItems: "center", gap: "0.5rem",
+              background: i === activeStep ? s.bg : "transparent",
+              border: `1px solid ${i === activeStep ? s.color + "50" : "var(--border)"}`,
+              borderRadius: "999px",
+              padding: "0.4rem 0.875rem",
+              cursor: "pointer", transition: "all 0.3s",
+            }}>
+              <span style={{
+                fontFamily: "'DM Mono', monospace", fontSize: "0.65rem",
+                color: i === activeStep ? s.color : "var(--dim)",
+                letterSpacing: "0.06em",
+              }}>{s.n}</span>
+              <span style={{
+                fontFamily: "'Outfit', sans-serif", fontSize: "0.8rem",
+                color: i === activeStep ? s.color : "var(--muted)",
+                fontWeight: i === activeStep ? 600 : 400,
+              }}>{s.title}</span>
+            </button>
           ))}
         </div>
       </section>
@@ -308,7 +278,7 @@ export default function LandingPage() {
         flexWrap: "wrap", position: "relative", zIndex: 5,
       }}>
         {[
-          { icon: <LockIcon />, text: "Password encrypted by GitHub Secrets API" },
+          { icon: <LockIcon />,   text: "Password encrypted by GitHub Secrets API" },
           { icon: <ShieldIcon />, text: "Credentials never stored on AutoShare servers" },
           { icon: <UnlockIcon />, text: "Delete your repo anytime to fully revoke" },
         ].map(({ icon, text }) => (
@@ -329,15 +299,161 @@ export default function LandingPage() {
   );
 }
 
-/* ─── Icons ─────────────────────────────────────────────────────────── */
+/* ─── Scene 1: GitHub OAuth ──────────────────────────────────────────── */
+function SceneGitHub() {
+  return (
+    <div style={{ padding: "2.5rem 2rem", animation: "sceneFadeIn 0.5s ease both" }}>
+      {/* GitHub logo + name */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "1.75rem" }}>
+        <svg width="40" height="40" fill="#e6edf3" viewBox="0 0 24 24" style={{ marginBottom: "0.75rem" }}>
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+        </svg>
+        <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.85rem", color: "var(--muted)", textAlign: "center" }}>
+          <strong style={{ color: "var(--text)" }}>AutoShare</strong> by nepnpc wants access to:
+        </p>
+      </div>
 
+      {/* Permissions */}
+      <div style={{ marginBottom: "1.75rem", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+        {[
+          { label: "Read & write repositories", delay: "0.1s" },
+          { label: "Read & write Actions secrets", delay: "0.25s" },
+          { label: "Trigger GitHub Actions workflows", delay: "0.4s" },
+        ].map(({ label, delay }) => (
+          <div key={label} style={{
+            display: "flex", alignItems: "center", gap: "0.75rem",
+            padding: "0.6rem 0.875rem",
+            background: "rgba(29,111,235,0.06)", borderRadius: "8px",
+            border: "1px solid rgba(29,111,235,0.15)",
+            animation: `sceneFadeIn 0.4s ease both`,
+            animationDelay: delay,
+          }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--bright)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.78rem", color: "var(--muted)" }}>{label}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Authorize button */}
+      <button style={{
+        width: "100%", padding: "0.8rem",
+        background: "var(--blue)", border: "none",
+        borderRadius: "8px", color: "#fff",
+        fontFamily: "'Outfit', sans-serif", fontWeight: 600, fontSize: "0.95rem",
+        cursor: "pointer",
+        animation: "authPulse 2s ease-in-out infinite",
+      }}>
+        Authorize AutoShare
+      </button>
+    </div>
+  );
+}
+
+/* ─── Scene 2: Meroshare Credentials ────────────────────────────────── */
+function SceneCredentials() {
+  return (
+    <div style={{ padding: "2rem", animation: "sceneFadeIn 0.5s ease both" }}>
+      <p style={{
+        fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: "1rem",
+        color: "var(--text)", marginBottom: "1.5rem",
+      }}>Add your Meroshare account</p>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem", marginBottom: "1.5rem" }}>
+        {[
+          { label: "DP Code",  value: "11000",    delay: "0s",    mono: true  },
+          { label: "Username", value: "02532993", delay: "0.3s",  mono: false },
+          { label: "Password", value: "••••••••", delay: "0.6s",  mono: false },
+          { label: "CRN",      value: "S01795…",  delay: "0.9s",  mono: true  },
+        ].map(({ label, value, delay, mono }) => (
+          <div key={label} style={{ animation: `sceneFadeIn 0.4s ease both`, animationDelay: delay }}>
+            <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.65rem", color: "var(--muted)", letterSpacing: "0.08em", marginBottom: "0.3rem" }}>{label}</p>
+            <div style={{
+              padding: "0.55rem 0.875rem",
+              background: "rgba(240,246,252,0.04)",
+              border: "1px solid rgba(29,111,235,0.35)",
+              borderRadius: "7px",
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+            }}>
+              <span style={{
+                fontFamily: mono ? "'DM Mono', monospace" : "'Outfit', sans-serif",
+                fontSize: "0.88rem", color: "var(--text)",
+              }}>{value}</span>
+              <span style={{
+                display: "inline-block", width: "2px", height: "16px",
+                background: "var(--blue-hi)",
+                animation: "cursorBlink 1s ease infinite",
+              }} />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <button style={{
+        width: "100%", padding: "0.8rem",
+        background: "linear-gradient(135deg, var(--blue) 0%, var(--glow) 100%)",
+        border: "none", borderRadius: "8px", color: "#fff",
+        fontFamily: "'Outfit', sans-serif", fontWeight: 600, fontSize: "0.95rem",
+        cursor: "pointer",
+        boxShadow: "0 0 24px rgba(29,111,235,0.35), 0 0 40px rgba(34,197,94,0.12)",
+        animation: `sceneFadeIn 0.4s ease both`,
+        animationDelay: "1.1s",
+      }}>
+        Activate Bot →
+      </button>
+    </div>
+  );
+}
+
+/* ─── Scene 3: Bot Running ───────────────────────────────────────────── */
+function SceneBot() {
+  const lines = [
+    { text: "$ docker run ghcr.io/nepnpc/autoshare-bot",  color: "var(--dim)",    delay: "0s"    },
+    { text: "> Checking open IPOs...",                     color: "var(--muted)",  delay: "0.4s"  },
+    { text: "✓ NRIC Hydropower IPO",                       color: "var(--bright)", delay: "0.9s"  },
+    { text: "  Applied successfully",                      color: "var(--dim)",    delay: "1.1s"  },
+    { text: "✓ Kumari Life Insurance IPO",                 color: "var(--bright)", delay: "1.6s"  },
+    { text: "  Applied successfully",                      color: "var(--dim)",    delay: "1.8s"  },
+    { text: "> Done. 2/2 IPOs applied.",                   color: "var(--orange)", delay: "2.3s"  },
+  ];
+
+  return (
+    <div style={{ padding: "1.75rem 2rem", animation: "sceneFadeIn 0.5s ease both" }}>
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1.5rem" }}>
+        <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--bright)", display: "inline-block", animation: "pulseGlowGreen 2s ease infinite" }} />
+        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.72rem", color: "var(--muted)", letterSpacing: "0.08em" }}>
+          AUTOSHARE IPO BOT · RUNNING
+        </span>
+      </div>
+
+      {/* Terminal */}
+      <div style={{
+        background: "#010409", borderRadius: "8px",
+        border: "1px solid var(--border)",
+        padding: "1.25rem", fontFamily: "'DM Mono', monospace", fontSize: "0.8rem",
+        display: "flex", flexDirection: "column", gap: "0.45rem",
+      }}>
+        {lines.map(({ text, color, delay }) => (
+          <div key={text} style={{
+            color, opacity: 0,
+            animation: `logIn 0.3s ease both`,
+            animationDelay: delay,
+            animationFillMode: "forwards",
+          }}>
+            {text}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Shared components ──────────────────────────────────────────────── */
 function LogoMark() {
   return (
-    <div style={{
-      width: 38, height: 38, borderRadius: 9, overflow: "hidden",
-      background: "#fff", flexShrink: 0,
-      display: "flex", alignItems: "center", justifyContent: "center",
-    }}>
+    <div style={{ width: 38, height: 38, borderRadius: 9, overflow: "hidden", background: "#fff", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
       <img src="/logo.png" alt="AutoShare" width={36} height={36} style={{ objectFit: "contain", display: "block" }} />
     </div>
   );
@@ -351,40 +467,10 @@ function GitHubIcon() {
   );
 }
 
-function ConnectIcon() {
-  return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-    </svg>
-  );
-}
-
-function AccountIcon() {
-  return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="5" width="20" height="14" rx="2" />
-      <line x1="2" y1="10" x2="22" y2="10" />
-    </svg>
-  );
-}
-
-function BotIcon() {
-  return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="11" width="18" height="10" rx="2" />
-      <circle cx="12" cy="5" r="2" />
-      <path d="M12 7v4" />
-      <line x1="8" y1="16" x2="8" y2="16" strokeWidth="2.5" />
-      <line x1="16" y1="16" x2="16" y2="16" strokeWidth="2.5" />
-    </svg>
-  );
-}
-
 function LockIcon() {
   return (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
     </svg>
   );
 }
@@ -400,8 +486,7 @@ function ShieldIcon() {
 function UnlockIcon() {
   return (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-      <path d="M7 11V7a5 5 0 0 1 9.9-1" />
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 9.9-1" />
     </svg>
   );
 }

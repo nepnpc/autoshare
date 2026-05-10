@@ -376,47 +376,22 @@ function DashboardInner() {
           </div>
 
           {statusData.runs.length === 0 ? (
-            <div>
+            <div style={{ padding: "2rem 0", textAlign: "center" }}>
               <div style={{
-                display: "flex", alignItems: "center", gap: "0.75rem",
-                marginBottom: "0.875rem",
+                width: "40px", height: "40px", borderRadius: "50%",
+                background: "rgba(29,111,235,0.08)", border: "1px solid rgba(29,111,235,0.2)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                margin: "0 auto 1rem",
               }}>
-                <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
-                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.65rem", color: "var(--dim)", letterSpacing: "0.1em" }}>EXAMPLE · YOUR LOG WILL LOOK LIKE THIS</span>
-                <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue-hi)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+                </svg>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", opacity: 0.4 }}>
-                {[
-                  { ipo_name: "NRIC Hydropower IPO", status: "applied", run_at: "2026-05-10T00:30:00Z", error_message: null },
-                  { ipo_name: "Kumari Life Insurance IPO", status: "applied", run_at: "2026-05-09T00:30:00Z", error_message: null },
-                  { ipo_name: null, status: "no_ipos", run_at: "2026-05-08T00:30:00Z", error_message: null },
-                ].map((r, i) => (
-                  <div key={i} style={{
-                    display: "flex", justifyContent: "space-between", alignItems: "center",
-                    padding: "0.875rem 1rem",
-                    background: "rgba(13,17,23,0.7)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "8px", gap: "1rem", flexWrap: "wrap",
-                  }}>
-                    <p style={{ color: "var(--text)", fontSize: "0.9rem", fontWeight: 500 }}>
-                      {r.ipo_name || "No open IPOs"}
-                    </p>
-                    <div style={{ display: "flex", gap: "1.25rem", alignItems: "center", flexShrink: 0 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-                        <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: STATUS_DOT[r.status] || "var(--muted)", display: "inline-block" }} />
-                        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.78rem", color: STATUS_DOT[r.status] || "var(--muted)", fontWeight: 500, letterSpacing: "0.04em" }}>
-                          {STATUS_LABEL[r.status] || r.status}
-                        </span>
-                      </div>
-                      <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.72rem", color: "var(--dim)" }}>
-                        {fmt(r.run_at)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.68rem", color: "var(--dim)", textAlign: "center", marginTop: "1rem" }}>
-                Bot hasn&apos;t run yet — runs daily at a random time NST
+              <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.78rem", color: "var(--muted)", marginBottom: "0.35rem" }}>
+                No runs yet
+              </p>
+              <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.68rem", color: "var(--dim)" }}>
+                Bot runs daily automatically · results appear here
               </p>
             </div>
           ) : (
