@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getLoginUrl, isLoggedIn } from "@/lib/api";
+import { Suspense } from "react";
 
 const STEP_META = [
   { n: "01", title: "Connect GitHub",         color: "#1d6feb", bg: "rgba(29,111,235,0.08)"  },
@@ -10,16 +11,20 @@ const STEP_META = [
   { n: "03", title: "Wake up to allotments",   color: "#ea580c", bg: "rgba(234,88,12,0.08)"   },
 ];
 
-export default function LandingPage() {
+function LandingInner() {
   const router = useRouter();
+  const params = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
     if (isLoggedIn()) router.replace("/dashboard");
-  }, [router]);
+    const err = params.get("error");
+    if (err === "oauth_failed") setAuthError("GitHub sign-in failed. Please try again.");
+  }, [router, params]);
 
   useEffect(() => {
     const t = setInterval(() => setActiveStep(p => (p + 1) % 3), 4500);
@@ -136,6 +141,16 @@ export default function LandingPage() {
         }}>
           Your password never leaves GitHub&apos;s encrypted secrets vault.
         </p>
+
+        {authError && (
+          <div style={{
+            background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: "8px",
+            padding: "0.75rem 1.25rem", marginBottom: "1rem", color: "#dc2626",
+            fontFamily: "'Roboto Mono', monospace", fontSize: "0.78rem", textAlign: "center",
+          }}>
+            {authError}
+          </div>
+        )}
 
         <div className="anim-fade-up anim-delay-3" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.875rem", marginBottom: "5rem" }}>
           <button onClick={handleConnect} disabled={loading} style={{
@@ -303,7 +318,7 @@ export default function LandingPage() {
             </svg>
             nepnpc
           </a>
-          <a href="mailto:subwrn@gmail.com" style={{
+          <a href="mailto:hello@subarnakatwal.com.np" style={{
             display: "flex", alignItems: "center", gap: "0.5rem",
             padding: "0.5rem 1rem", borderRadius: "8px",
             background: "#f8fafc", border: "1px solid rgba(15,23,42,0.12)",
@@ -318,7 +333,7 @@ export default function LandingPage() {
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
               <polyline points="22,6 12,13 2,6" />
             </svg>
-            subwrn@gmail.com
+            hello@subarnakatwal.com.np
           </a>
         </div>
         <p style={{ fontFamily: "'Roboto', sans-serif", fontSize: "0.75rem", color: "#94a3b8" }}>
@@ -326,6 +341,14 @@ export default function LandingPage() {
         </p>
       </footer>
     </main>
+  );
+}
+
+export default function LandingPage() {
+  return (
+    <Suspense>
+      <LandingInner />
+    </Suspense>
   );
 }
 
