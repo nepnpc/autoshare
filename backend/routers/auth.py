@@ -98,7 +98,6 @@ async def callback(
             workflow_yaml,
             "AutoShare: update bot workflow",
         )
-        await gh.set_secret(token, github_username, REPO_NAME, "GHCR_PAT", settings.ghcr_pat)
     except Exception as e:
         user.status = "error"
         await db.commit()
@@ -154,9 +153,6 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - name: Login to GitHub Container Registry
-        run: echo "${{{{ secrets.GHCR_PAT }}}}" | docker login ghcr.io -u nepnpc --password-stdin
-
       - name: Apply for open IPOs
         env:
           MEROSHARE_ACCOUNT_{i}: ${{{{ secrets.MEROSHARE_ACCOUNT_{i} }}}}
@@ -195,9 +191,6 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - name: Login to GitHub Container Registry
-        run: echo "${{{{ secrets.GHCR_PAT }}}}" | docker login ghcr.io -u nepnpc --password-stdin
-
       - name: Apply for open IPOs
         env:
 {acct_env}

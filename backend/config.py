@@ -9,7 +9,6 @@ class Settings(BaseSettings):
     github_client_secret: str
     encryption_key: str
     jwt_secret: str
-    ghcr_pat: str
     frontend_url: str = "http://localhost:3000"
     backend_url: str = "http://localhost:8000"
     docker_image: str = "ghcr.io/nepnpc/autoshare-bot:latest"
